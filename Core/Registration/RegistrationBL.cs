@@ -2,6 +2,7 @@
 using System.Security.Cryptography;
 using System.Text;
 using System;
+using Model;
 
 namespace Core.Registration
 {
@@ -13,7 +14,7 @@ namespace Core.Registration
             _registrationDal = new RegistrationDal();
         }
 
-        public bool RegisterUser(Model.Registration registration)
+        public bool RegisterUser(Model.User registration)
         {
             using (SHA256 hasher = SHA256.Create())
             {

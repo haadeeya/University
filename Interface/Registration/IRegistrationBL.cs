@@ -4,6 +4,6 @@ namespace Interface
 {
     public interface IRegistrationBL
     {
-        bool RegisterUser(Registration registration);
+        bool RegisterUser(User registration);
     }
 }
