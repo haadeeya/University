@@ -1,18 +1,19 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Interface.Repository;
 using Model;
 
 namespace Interface
 {
     public interface IStudentDal
     {
-        IEnumerable<Student> GetStudents();
-        Student GetStudentbyId(int id);
+        IEnumerable<Student> Get();
+        Student GetbyId(int id);
 
-        Student CreateStudent(Student student);
+        Student Create(Student student);
 
-        Student UpdateStudent(Student student);
+        Student Update(Student student);
 
-        bool DeleteStudent(int studentId);
+        bool Delete(int studentId);
     }
 }

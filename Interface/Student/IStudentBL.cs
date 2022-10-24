@@ -1,17 +1,18 @@
-﻿using Model;
+﻿using Interface.Repository;
+using Model;
 using System.Collections.Generic;
 
 namespace Interface
 {
     public interface IStudentBL
     {
-        IEnumerable<Student> GetStudents();
-        Student GetStudentbyId(int id);
+        IEnumerable<Student> Get();
+        Student GetbyId(int id);
 
-        Student CreateStudent(Student student);
+        Student Create(Student student);
 
-        Student UpdateStudent(Student student);
+        Student Update(Student student);
 
-        bool DeleteStudent(int studentId);
+        bool Delete(int studentId);
     }
 }

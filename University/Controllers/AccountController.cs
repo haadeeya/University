@@ -1,7 +1,5 @@
-﻿using Core.Login;
-using Core.Registration;
+﻿using Core.Registration;
 using Interface;
-using Interface.Login;
 using Model;
 using System.Web.Mvc;
 using System.Web.Security;
@@ -11,13 +9,10 @@ namespace University.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly IRegistrationBL _registrationBL;
-        private readonly ILoginBL _loginBL;
-
+        private readonly IUserBL _userBL;
         public AccountController()
         {
-            _registrationBL = new RegistrationBL();
-            _loginBL = new LoginBL();
+            _userBL = new UserBL();
         }
 
         public ActionResult Login()
@@ -31,7 +26,7 @@ namespace University.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = _loginBL.Authenticate(login);
+                var user = _userBL.Authenticate(login);
                 if (user.Username!=null)
                     this.Session["CurrentUser"] = user;
                     this.Session["Username"] = user.Username;
@@ -49,12 +44,12 @@ namespace University.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Register(User registration)
+        public ActionResult Register(User user)
         {
             if (ModelState.IsValid)
             {
                 MyLogger.GetInstance().Info("Entering the Account Controller for Registration");
-                var result = _registrationBL.RegisterUser(registration);
+                var result = _userBL.Create(user);
                 return RedirectToAction("Index");
             }
             return View();

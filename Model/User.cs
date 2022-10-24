@@ -2,9 +2,9 @@
 
 namespace Model
 {
-    public class User
+    public class User : EntityBase
     {
-        public int UserId { get; set; }
+        public new int Id { get; set; }
         [Required]
         public string Username { get; set; }
 

@@ -42,11 +42,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Class1.cs" />
-    <Compile Include="Login\LoginBL.cs" />
-    <Compile Include="Login\LoginDAL.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Registration\RegistrationBL.cs" />
-    <Compile Include="Registration\RegistrationDal.cs" />
+    <Compile Include="User\UserBL.cs" />
+    <Compile Include="User\UserDal.cs" />
     <Compile Include="Student\StudentBL.cs" />
     <Compile Include="Student\StudentDal.cs" />
   </ItemGroup>

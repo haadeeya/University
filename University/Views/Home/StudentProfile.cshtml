@@ -1,0 +1,28 @@
+﻿@model Model.Student
+@{
+    ViewBag.Title = "StudentProfile";
+}
+
+<h2>StudentProfile</h2>
+
+@if (Model != null)
+{
+        <ul id="menu">
+
+            <li>
+                @Html.DisplayFor(modelItem => Model.Surname)
+            </li>
+            <li>
+                @Html.DisplayFor(modelItem => Model.Name)
+                <br />
+            </li>
+
+            <li>
+                @foreach (var subject in Model.Subjects)
+                {
+                    @Html.DisplayFor(modelItem => subject.Subject.SubjectName)
+                    @Html.DisplayFor(modelItem => subject.Grade)
+                }
+            </li>
+        </ul>
+}  

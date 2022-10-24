@@ -1,43 +1,73 @@
 ﻿using Interface;
+using Interface.Repository;
 using System.Collections.Generic;
 
 namespace Core.Student
 {
-    public class StudentBL : IStudentBL
+    public class StudentBL/*<T> : IRepository<T> where T: Model.Student*/ : IStudentDal
     {
         private readonly IStudentDal _studentDal;
         public StudentBL()
         {
             _studentDal = new StudentDal();
         }
-        public Model.Student CreateStudent(Model.Student student)
+        public Model.Student Create(Model.Student student)
         {
-            var newstudent = _studentDal.CreateStudent(student);
+            var newstudent = _studentDal.Create(student);
             return newstudent;
         }
 
-        public bool DeleteStudent(int studentId)
+        public bool Delete(int studentId)
         {
-            var deletestudent = _studentDal.DeleteStudent(studentId);
+            var deletestudent = _studentDal.Delete(studentId);
             return deletestudent = true ? true : false;
         }
 
-        public Model.Student GetStudentbyId(int id)
+        public Model.Student GetbyId(int id)
         {
-            var currentStudent = _studentDal.GetStudentbyId(id);
+            var currentStudent = _studentDal.GetbyId(id);
             return currentStudent;
         }
 
-        public IEnumerable<Model.Student> GetStudents()
+        public IEnumerable<Model.Student> Get()
         {
-            var allStudents = _studentDal.GetStudents();
+            var allStudents = _studentDal.Get();
             return allStudents;
         }
 
-        public Model.Student UpdateStudent(Model.Student student)
+        public Model.Student Update(Model.Student student)
         {
-            var updatestudent = _studentDal.CreateStudent(student);
+            var updatestudent = _studentDal.Create(student);
             return updatestudent;
         }
+
+        //T IRepository<T>.GetbyId(int id)
+        //{
+        //    var currentStudent = _studentDal.GetbyId(id);
+        //    return (T)currentStudent;
+        //}
+
+        //public IEnumerable<T> GetAll()
+        //{
+        //    var allStudents = _studentDal.Get();
+        //    return (IEnumerable<T>)allStudents;
+        //}
+
+        //bool IRepository<T>.Delete(T entity)
+        //{
+        //    var deletestudent = _studentDal.Delete(entity.Id);
+        //    return deletestudent = true ? true : false;
+        //}
+
+        //public T Create(T entity)
+        //{
+        //    var newstudent = _studentDal.Create(entity);
+        //    return (T)newstudent;
+        //}
+
+        //public T Update(T entity)
+        //{
+        //    throw new System.NotImplementedException();
+        //}
     }
 }

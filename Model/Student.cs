@@ -4,9 +4,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Model
 {
-    public class Student
+    public class Student : EntityBase
     {
-        public int StudentId { get; set; }
+        public new int Id { get; set; }
 
         [Required(ErrorMessage = "NID is required.")]
         [StringLength(10, ErrorMessage = "The NID must contain 14 characters", MinimumLength = 14)]
