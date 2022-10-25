@@ -32,7 +32,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.IO.Compression" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -45,8 +47,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="User\UserBL.cs" />
     <Compile Include="User\UserDal.cs" />
-    <Compile Include="Student\StudentBL.cs" />
-    <Compile Include="Student\StudentDal.cs" />
+    <Compile Include="StudentManager\StudentBL.cs" />
+    <Compile Include="StudentManager\StudentDal.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DataAccess\DataAccess.csproj">
@@ -58,11 +60,11 @@
       <Name>Interface</Name>
     </ProjectReference>
     <ProjectReference Include="..\Model\Model.csproj">
-      <Project>{B201E5F8-00FD-4CD9-855D-797841403D1D}</Project>
+      <Project>{b201e5f8-00fd-4cd9-855d-797841403d1d}</Project>
       <Name>Model</Name>
     </ProjectReference>
     <ProjectReference Include="..\Utility\Utility.csproj">
-      <Project>{45CEB493-F0A9-4F2F-9B9F-AC67F3E285F1}</Project>
+      <Project>{80634754-6E9D-4459-AEA1-D397FE7D24C2}</Project>
       <Name>Utility</Name>
     </ProjectReference>
   </ItemGroup>

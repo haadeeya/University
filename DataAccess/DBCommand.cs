@@ -2,10 +2,12 @@
 using System.Data;
 using System.Collections.Generic;
 using Interface;
+using System.Threading.Tasks;
+using IDbCommand = Interface.IDbCommand;
 
 namespace DataAccess
 {
-    public class DBCommand : IDBCommand
+    public class DBCommand : IDbCommand
     {
         private readonly IDBConnection _dbConnection;
 
@@ -17,13 +19,13 @@ namespace DataAccess
 
         }
 
-        public DataTable GetData(string query)
+        public async Task<DataTable> GetData(string query)
 
         {
 
             DataTable dt = new DataTable();
 
-            using (SqlCommand cmd = new SqlCommand(query, _dbConnection.connection))
+            using (SqlCommand cmd = new SqlCommand(query, _dbConnection.Connection))
 
             {
 
@@ -41,13 +43,13 @@ namespace DataAccess
 
             }
 
-            _dbConnection.CloseConnection();
+            await _dbConnection.CloseConnection();
 
             return dt;
 
         }
 
-        public int UpdateAndInsertData(string query, List<SqlParameter> parameters)
+        public async Task<int> UpdateAndInsertData(string query, List<SqlParameter> parameters)
 
         {
 
@@ -55,7 +57,7 @@ namespace DataAccess
 
 
 
-            using (SqlCommand cmd = new SqlCommand(query, _dbConnection.connection))
+            using (SqlCommand cmd = new SqlCommand(query, _dbConnection.Connection))
 
             {
 
@@ -81,13 +83,13 @@ namespace DataAccess
 
 
 
-            _dbConnection.CloseConnection();
+           await _dbConnection.CloseConnection();
 
             return numberOfRowsAffected;
 
         }
 
-        public DataTable GetDataWithConditions(string query, List<SqlParameter> parameters)
+        public async Task<DataTable> GetDataWithConditions(string query, List<SqlParameter> parameters)
 
         {
 
@@ -95,7 +97,7 @@ namespace DataAccess
 
 
 
-            using (SqlCommand cmd = new SqlCommand(query, _dbConnection.connection))
+            using (SqlCommand cmd = new SqlCommand(query, _dbConnection.Connection))
 
             {
 
@@ -129,7 +131,7 @@ namespace DataAccess
 
             }
 
-            _dbConnection.CloseConnection();
+            await _dbConnection.CloseConnection();
 
             return dt;
 

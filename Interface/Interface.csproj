@@ -42,13 +42,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Class1.cs" />
-    <Compile Include="IDBCommand.cs" />
-    <Compile Include="Repository\IRepository.cs" />
+    <Compile Include="IDbCommand.cs" />
+    <Compile Include="Repository\IRepositoryBL.cs" />
+    <Compile Include="Repository\IRepositoryDal.cs" />
     <Compile Include="User\IUserBL.cs" />
     <Compile Include="User\IUserDal.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Student\IStudentBL.cs" />
-    <Compile Include="Student\IStudentDal.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Model\Model.csproj">

@@ -1,9 +1,10 @@
 ﻿using Core.Registration;
 using Interface;
 using Model;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using System.Web.Security;
-using Utility;
+using University.Utility;
 
 namespace University.Controllers
 {
@@ -22,11 +23,12 @@ namespace University.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Login(Login login)
+        public async Task<ActionResult> Login(Login login)
         {
+            MyLogger.GetInstance().Info("Entering the DAL for login");
             if (ModelState.IsValid)
             {
-                var user = _userBL.Authenticate(login);
+                var user = await _userBL.Authenticate(login);
                 if (user.Username!=null)
                     this.Session["CurrentUser"] = user;
                     this.Session["Username"] = user.Username;
@@ -48,7 +50,7 @@ namespace University.Controllers
         {
             if (ModelState.IsValid)
             {
-                MyLogger.GetInstance().Info("Entering the Account Controller for Registration");
+                
                 var result = _userBL.Create(user);
                 return RedirectToAction("Index");
             }

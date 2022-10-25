@@ -1,11 +1,12 @@
 ﻿using System.Data.SqlClient;
+using System.Threading.Tasks;
 
 namespace DataAccess
 {
     public interface IDBConnection
     {
-        void OpenConnection();
-        void CloseConnection();
-        SqlConnection connection { get; set; }
+         Task OpenConnection();
+         Task CloseConnection();
+        SqlConnection Connection { get; set; }
     }
 }

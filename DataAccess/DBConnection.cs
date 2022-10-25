@@ -1,5 +1,6 @@
 ﻿using static DataAccess.DBConnection;
 using System.Data.SqlClient;
+using System.Threading.Tasks;
 
 namespace DataAccess
 {
@@ -9,7 +10,7 @@ namespace DataAccess
             public const string connectionString = @"server=localhost;database=StudentRegistration;uid=wbpoc;pwd=sql@tfs2008";
 
 
-            public SqlConnection connection { get; set; }
+            public SqlConnection Connection { get; set; }
 
 
 
@@ -17,7 +18,7 @@ namespace DataAccess
 
             {
 
-                connection = new SqlConnection(connectionString);
+                Connection = new SqlConnection(connectionString);
 
                 OpenConnection();
 
@@ -25,7 +26,7 @@ namespace DataAccess
 
 
 
-            public void OpenConnection()
+            public Task OpenConnection()
 
             {
 
@@ -33,47 +34,45 @@ namespace DataAccess
 
                 {
 
-                    if (connection.State == System.Data.ConnectionState.Open)
+                    if (Connection.State == System.Data.ConnectionState.Open)
 
                     {
 
-                        connection.Close();
+                        Connection.Close();
 
                     }
 
                     // without this, authentication works but update needs this to be able to work correctly !!!
 
-                    connection.Open();
+                    Connection.Open();
 
                 }
 
                 catch (SqlException ex)
 
                 {
-
                     throw ex;
-
                 }
 
+                return Task.CompletedTask;
             }
 
 
-
-            public void CloseConnection()
+            public Task CloseConnection()
 
             {
 
-                if (connection != null && connection.State == System.Data.ConnectionState.Open)
+                if (Connection != null && Connection.State == System.Data.ConnectionState.Open)
 
                 {
 
-                    connection.Close();
+                    Connection.Close();
 
-                    connection.Dispose();
+                    Connection.Dispose();
 
                 }
-
-            }
+                return Task.CompletedTask;
+        }
 
         }
 }

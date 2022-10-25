@@ -1,12 +1,21 @@
 ﻿using Interface.Repository;
 using Model;
+using System.Collections.Generic;
 using System.Data;
+using System.Threading.Tasks;
 
 namespace Interface
 {
-    public interface IUserDal
+    public interface IUserDal : IRepositoryDal<User>
     {
-        bool Create(User user);
-        DataTable Authenticate(Model.Login login);
+        Task<IEnumerable<User>> Get();
+        Task<User> GetbyId(int id);
+        Task<DataTable> Authenticate(Login login);
+
+        Task<User> Create(User user);
+
+        Task<User> Update(User user);
+
+        Task<bool> Delete(int userId);
     }
 }

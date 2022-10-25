@@ -1,7 +1,9 @@
 ﻿using Core.Registration;
-using Core.Student;
+using Core.StudentManager;
 using Interface;
+using Interface.Repository;
 using Model;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using System.Web.UI.WebControls;
 
@@ -9,20 +11,20 @@ namespace University.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly IUserBL _registrationBL;
-        private readonly IStudentBL _studentBL;
+        private readonly IUserBL _userBL;
+        private readonly IRepositoryBL<Student> _studentBL;
         public HomeController()
         {
-            _registrationBL = new UserBL();
+            _userBL = new UserBL();
             _studentBL = new StudentBL();
         }
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
             var loggedUser = Session["CurrentUser"] as User;
 
             if (loggedUser != null && loggedUser.Role == 0)
             {
-                var currentStudent = _studentBL.GetbyId(loggedUser.Id);
+                var currentStudent = await _studentBL.GetbyId(loggedUser.Id);
                 return View(currentStudent);
             }
 
@@ -31,12 +33,13 @@ namespace University.Controllers
 
         public ActionResult StudentProfile()
         {
-            Student currentStudent = new Student();
-            var loggedUser = Session["CurrentUser"] as User;
-            if (loggedUser != null) { 
+            return View();
+            //Student currentStudent = new Student();
+            //var loggedUser = Session["CurrentUser"] as User;
+            //if (loggedUser != null) { 
                 
-            }
-            return View(currentStudent);
+            //}
+            //return View(currentStudent);
         }
 
         public ActionResult About()
