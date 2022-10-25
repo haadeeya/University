@@ -25,21 +25,27 @@ namespace University.Controllers
             if (loggedUser != null && loggedUser.Role == 0)
             {
                 var currentStudent = await _studentBL.GetbyId(loggedUser.Id);
-                return View(currentStudent);
+                if(currentStudent == null)
+                {
+                    return RedirectToAction("CreateProfile");
+                }
+                else
+                {
+                    return View(currentStudent);
+                }
             }
 
+            return View();
+        }
+
+        public ActionResult CreateProfile()
+        {
             return View();
         }
 
         public ActionResult StudentProfile()
         {
             return View();
-            //Student currentStudent = new Student();
-            //var loggedUser = Session["CurrentUser"] as User;
-            //if (loggedUser != null) { 
-                
-            //}
-            //return View(currentStudent);
         }
 
         public ActionResult About()

@@ -1,0 +1,67 @@
+﻿* {
+    box-sizing: border-box;
+}
+
+html {
+    height: 100%;
+}
+
+body {
+    min-height: 100%;
+}
+
+input {
+    width: 100%;
+    padding: 0.50rem 0.25rem 0.50rem 0.25rem;
+}
+
+
+input[type="submit"] {
+     padding: 0.50rem 0.25rem 0.50rem 0.25rem;
+     margin-top: 1rem;
+     width: 100%;
+     font-family: 'Noto Sans';
+     background-color: rgb(24, 78, 165);
+     color: white;
+     border:none;
+     border-radius:5px;
+}
+
+.container {
+    /* display: flex; */
+    justify-content: center;
+    margin-top: 5rem;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 0.50rem;
+    font-family: 'Noto Sans';
+    font-size: 1rem;
+}
+
+.login-form, .registration-form {
+    /* display: flex; */
+    /* flex-direction: column; */
+    background-color: white;
+    height: 30rem;
+    /* width: 100%; */
+    margin: auto;
+    max-width: 30rem;
+    padding: 1rem;
+    border: 1px solid rgb(0, 0, 0);
+    border-radius: 15px;
+}
+
+.mb-4 {
+    margin-bottom: 1rem;
+}
+
+.buttonclass {
+    text-align: center;
+    justify-content: center;
+}
+.col {
+    margin-bottom: 1rem;
+    margin-left: 1rem;
+}

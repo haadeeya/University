@@ -10,7 +10,7 @@ namespace Interface
     {
         Task<IEnumerable<User>> Get();
         Task<User> GetbyId(int id);
-        Task<DataTable> Authenticate(Login login);
+        Task<DataTable> Get(Login login);
 
         Task<User> Create(User user);
 

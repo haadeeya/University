@@ -1,6 +1,8 @@
 ﻿using Core.Registration;
 using Interface;
 using Model;
+using NLog.LayoutRenderers;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using System.Web.Security;
@@ -22,39 +24,54 @@ namespace University.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Login(Login login)
+        public async Task<JsonResult> Login(Login data)
         {
-            MyLogger.GetInstance().Info("Entering the DAL for login");
-            if (ModelState.IsValid)
+            MyLogger.GetInstance().Info("Entering the Account Controller for login");
+
+            if (!ModelState.IsValid)
             {
-                var user = await _userBL.Authenticate(login);
-                if (user.Username!=null)
-                    this.Session["CurrentUser"] = user;
-                    this.Session["Username"] = user.Username;
-                return RedirectToAction("Index", "Home");
+                return Json(new { error = "Invalid data" }, JsonRequestBehavior.AllowGet);
             }
-            return View(login);
+
+            var user = await _userBL.Authenticate(data);
+
+            if (user == null)
+            {
+                return Json(new { error = "Password and username do not match or user does not exist." }, JsonRequestBehavior.AllowGet);
+            }
+
+            this.Session["CurrentUser"] = user;
+            this.Session["Username"] = user.Username;
+
+            return Json(new { url = Url.Action("Index", "Home") }, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult Register()
         {
-            
+
             return View();
         }
 
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Register(User user)
+        public async Task<JsonResult> Register(User user)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                
-                var result = _userBL.Create(user);
-                return RedirectToAction("Index");
+                return Json(new { error = "Invalid data" }, JsonRequestBehavior.AllowGet);
             }
-            return View();
+
+            var result = await _userBL.Create(user);
+
+            if (user == null)
+            {
+                return Json(new { error = "Password and username do not match or user does not exist." }, JsonRequestBehavior.AllowGet);
+            }
+
+            this.Session["CurrentUser"] = user;
+            this.Session["Username"] = user.Username;
+
+            return Json(new { url = Url.Action("Index", "Home") }, JsonRequestBehavior.AllowGet);
 
         }
 

@@ -19,9 +19,27 @@ namespace Core.Registration
             _dbCommand = new DBCommand();
         }
 
-        public Task<User> Create(User user)
+        public async Task<User> Create(User user)
         {
-            throw new NotImplementedException();
+            try
+            {
+                string query = $"INSERT INTO [User](Username, Email, Password, Role) VALUES(@Username, @Email, @Password, @Role)";
+                List<SqlParameter> parameters = new List<SqlParameter>();
+
+                parameters.Add(new SqlParameter("@Username", user.Username));
+                parameters.Add(new SqlParameter("@Email", user.Email));
+                parameters.Add(new SqlParameter("@Password", user.Password));
+                parameters.Add(new SqlParameter("@Role", (int)user.Role));
+
+                var result = await _dbCommand.UpdateAndInsertData(query, parameters);
+
+                return result > 0 ? user: null;
+            }
+            catch (Exception ex)
+            {
+                MyLogger.GetInstance().Error($"Error {ex.Message}");
+                throw ex;
+            }
         }
 
         public Task<bool> Delete(int userId)
@@ -44,7 +62,7 @@ namespace Core.Registration
             throw new NotImplementedException();
         }
 
-        async Task<DataTable> IUserDal.Authenticate(Login login)
+        async Task<DataTable> IUserDal.Get(Login login)
         {
             try
             {

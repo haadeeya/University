@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
+using University.Utility;
 
 namespace Core.StudentManager
 {
@@ -17,9 +18,26 @@ namespace Core.StudentManager
         {
             _dbCommand = new DBCommand();
         }
-        public Task<Student> Create(Student entity)
+        public async Task<Student> Create(Student entity)
         {
-            throw new System.NotImplementedException();
+            try
+            {
+                string query = @"INSERT INTO [Student](Username, Email, Password, Role) VALUES(@Username, @Email, @Password, @Role);
+                                 INSERT INTO [StudentSubject](Username, Email, Password, Role) VALUES(@Username, @Email, @Password, @Role)";
+                List<SqlParameter> parameters = new List<SqlParameter>();
+
+                parameters.Add(new SqlParameter("@Email", entity.EmailAddress));
+
+
+                var result = await _dbCommand.UpdateAndInsertData(query, parameters);
+
+                return result > 0 ? entity : null;
+            }
+            catch (Exception ex)
+            {
+                MyLogger.GetInstance().Error($"Error {ex.Message}");
+                throw ex;
+            }
         }
 
         public Task<bool> Delete(int studentId)
@@ -54,26 +72,31 @@ namespace Core.StudentManager
 
                 var dt = await _dbCommand.GetDataWithConditions(query, parameters);
 
-                foreach (DataRow row in dt.Rows)
-                { 
-                    student.Id = Convert.ToInt32(row["StudentID"]);
-                    student.Surname = row["Surname"].ToString();
-                    student.Name = row["Name"].ToString();
-                    student.GuardianName = row["GuardianName"].ToString();
-                    student.EmailAddress = row["EmailAddress"].ToString();
-                    student.NID = row["NID"].ToString();
-                    student.DateOfBirth = DateTime.Parse(row["DateOfBirth"].ToString());
-                    student.PhoneNumber = row["PhoneNumber"].ToString();
-                    allsubjects.Add(new StudentSubject(Convert.ToInt32(row["StudentID"]), Convert.ToInt32(row["SubjectID"]), Convert.ToInt32(row["StudentSubjectID"]), new Subject(Convert.ToInt32(row["ID"]), row["SubjectName"].ToString()), row["Grade"].ToString()));
-                    student.Subjects = allsubjects;
-
+                if (dt.Rows.Count > 0) { 
+                    foreach (DataRow row in dt.Rows)
+                    { 
+                        student.Id = Convert.ToInt32(row["StudentID"]);
+                        student.Surname = row["Surname"].ToString();
+                        student.Name = row["Name"].ToString();
+                        student.GuardianName = row["GuardianName"].ToString();
+                        student.EmailAddress = row["EmailAddress"].ToString();
+                        student.NID = row["NID"].ToString();
+                        student.DateOfBirth = DateTime.Parse(row["DateOfBirth"].ToString());
+                        student.PhoneNumber = row["PhoneNumber"].ToString();
+                        allsubjects.Add(new StudentSubject(Convert.ToInt32(row["StudentID"]), Convert.ToInt32(row["SubjectID"]), Convert.ToInt32(row["StudentSubjectID"]), new Subject(Convert.ToInt32(row["ID"]), row["SubjectName"].ToString()), row["Grade"].ToString()));
+                        student.Subjects = allsubjects;
+                    }
+                    return student;
                 }
-
-                return student;
+                else
+                {
+                    return null;
+                }
+                
             }
             catch (Exception ex)
             {
-                //MyLogger.GetInstance().Error($"Error {ex.Message}");
+                MyLogger.GetInstance().Error($"Error {ex.Message}");
                 throw ex;
             }
         }
