@@ -24,7 +24,7 @@ namespace University.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> Login(Login data)
+        public JsonResult Login(Login data)
         {
             MyLogger.GetInstance().Info("Entering the Account Controller for login");
 
@@ -33,7 +33,7 @@ namespace University.Controllers
                 return Json(new { error = "Invalid data" }, JsonRequestBehavior.AllowGet);
             }
 
-            var user = await _userBL.Authenticate(data);
+            var user =  _userBL.Authenticate(data);
 
             if (user == null)
             {
@@ -54,24 +54,28 @@ namespace University.Controllers
 
 
         [HttpPost]
-        public async Task<JsonResult> Register(User user)
+        public JsonResult Register(User user)
         {
             if (!ModelState.IsValid)
             {
                 return Json(new { error = "Invalid data" }, JsonRequestBehavior.AllowGet);
             }
 
-            var result = await _userBL.Create(user);
+            var result =  _userBL.Create(user);
 
-            if (user == null)
+            if(result != null)
             {
-                return Json(new { error = "Password and username do not match or user does not exist." }, JsonRequestBehavior.AllowGet);
+                this.Session["CurrentUser"] = user;
+                this.Session["Username"] = user.Username;
+
+                return Json(new { url = Url.Action("Index", "Home") }, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                return Json(new { error = "Please enter your details properly." }, JsonRequestBehavior.AllowGet);
             }
 
-            this.Session["CurrentUser"] = user;
-            this.Session["Username"] = user.Username;
-
-            return Json(new { url = Url.Action("Index", "Home") }, JsonRequestBehavior.AllowGet);
+            
 
         }
 

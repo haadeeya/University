@@ -26,7 +26,6 @@ namespace University
             //          "~/Content/bootstrap.css",
             //          "~/Content/site.css"));
 
-            bundles.Add(new StyleBundle("~/Content/css").Include( "~/Content/login.css"));
         }
     }
 }

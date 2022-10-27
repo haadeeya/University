@@ -8,10 +8,10 @@ namespace Interface.Repository
 {
     public interface IRepositoryBL<T> where T : class
     {
-        Task<T> GetbyId(int id);
-        Task<IEnumerable<T>> Get();
-        Task<T> Create(T entity);
-        Task<T> Update(T entity);
-        Task<bool> Delete(int id);
+        T GetbyId(int id);
+        IEnumerable<T> Get();
+        T Create(T entity);
+        T Update(T entity);
+        bool Delete(int id);
     }
 }

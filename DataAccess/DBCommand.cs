@@ -19,7 +19,7 @@ namespace DataAccess
 
         }
 
-        public async Task<DataTable> GetData(string query)
+        public DataTable GetData(string query)
 
         {
 
@@ -43,13 +43,13 @@ namespace DataAccess
 
             }
 
-            await _dbConnection.CloseConnection();
+             _dbConnection.CloseConnection();
 
             return dt;
 
         }
 
-        public async Task<int> UpdateAndInsertData(string query, List<SqlParameter> parameters)
+        public int UpdateAndInsertData(string query, List<SqlParameter> parameters)
 
         {
 
@@ -83,13 +83,13 @@ namespace DataAccess
 
 
 
-           await _dbConnection.CloseConnection();
+            _dbConnection.CloseConnection();
 
             return numberOfRowsAffected;
 
         }
 
-        public async Task<DataTable> GetDataWithConditions(string query, List<SqlParameter> parameters)
+        public DataTable GetDataWithConditions(string query, List<SqlParameter> parameters)
 
         {
 
@@ -131,7 +131,7 @@ namespace DataAccess
 
             }
 
-            await _dbConnection.CloseConnection();
+             _dbConnection.CloseConnection();
 
             return dt;
 

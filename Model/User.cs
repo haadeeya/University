@@ -12,6 +12,7 @@ namespace Model
         public string Password { get; set; }
 
         [Required]
+        [RegularExpression(".+@.+\\..+", ErrorMessage = "Please Enter Correct Email Address")]
         public string Email { get; set; }
 
         public Role Role { get; set; }

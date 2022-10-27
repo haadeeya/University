@@ -18,7 +18,7 @@ namespace Core.Registration
             _userDal = new UserDal();
         }
 
-        public async Task<User> Authenticate(Login login)
+        public User Authenticate(Login login)
         {
             using (SHA256 hasher = SHA256.Create())
             {
@@ -28,7 +28,7 @@ namespace Core.Registration
                 login.Password = Convert.ToBase64String(passwordHash);
             }
 
-            var userDt = await _userDal.Get(login);
+            var userDt =  _userDal.Get(login);
 
             if (userDt.Rows.Count > 0)
             {
@@ -47,7 +47,7 @@ namespace Core.Registration
             return null;
         }
 
-        public async Task<User> Create(User user)
+        public User Create(User user)
         {
             using (SHA256 hasher = SHA256.Create())
             {
@@ -56,26 +56,26 @@ namespace Core.Registration
 
                 user.Password = Convert.ToBase64String(passwordHash);
             }
-            var result = await _userDal.Create(user);
+            var result =  _userDal.Create(user);
             return result;
         }
 
-        public Task<bool> Delete(int id)
+        public bool Delete(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<User>> Get()
+        public IEnumerable<User> Get()
         {
             throw new NotImplementedException();
         }
 
-        public Task<User> GetbyId(int id)
+        public User GetbyId(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<User> Update(User entity)
+        public User Update(User entity)
         {
             throw new NotImplementedException();
         }

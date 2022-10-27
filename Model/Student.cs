@@ -9,7 +9,7 @@ namespace Model
         public int Id { get; set; }
 
         [Required(ErrorMessage = "NID is required.")]
-        [StringLength(10, ErrorMessage = "The NID must contain 14 characters", MinimumLength = 14)]
+        [StringLength(14, ErrorMessage = "The NID must contain 14 characters")]
         public string NID { get; set; }
 
         [Required(ErrorMessage = "Name is required.")]
@@ -18,7 +18,6 @@ namespace Model
         [Required(ErrorMessage = "Surname is required.")]
         public string Surname { get; set; }
 
-        [Required(ErrorMessage = "Guardian Name is required.")]
         public string GuardianName { get; set; }
 
         [Required(ErrorMessage = "Email is required.")]
@@ -29,7 +28,7 @@ namespace Model
         public DateTime DateOfBirth { get; set; }
 
         [Required(ErrorMessage = "Phone Number is required.")]
-        [StringLength(10, ErrorMessage = "The Phone Number must contain 8 characters", MinimumLength = 8)]
+        [StringLength(8, ErrorMessage = "The Phone Number must contain 8 characters")]
         public string PhoneNumber { get; set; }
 
         public List<StudentSubject> Subjects { get; set; }

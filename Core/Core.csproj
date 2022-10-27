@@ -45,6 +45,8 @@
   <ItemGroup>
     <Compile Include="Class1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SubjectManager\SubjectBL.cs" />
+    <Compile Include="SubjectManager\SubjectDal.cs" />
     <Compile Include="User\UserBL.cs" />
     <Compile Include="User\UserDal.cs" />
     <Compile Include="StudentManager\StudentBL.cs" />

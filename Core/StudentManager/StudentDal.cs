@@ -18,7 +18,7 @@ namespace Core.StudentManager
         {
             _dbCommand = new DBCommand();
         }
-        public async Task<Student> Create(Student entity)
+        public Student Create(Student entity)
         {
             try
             {
@@ -29,7 +29,7 @@ namespace Core.StudentManager
                 parameters.Add(new SqlParameter("@Email", entity.EmailAddress));
 
 
-                var result = await _dbCommand.UpdateAndInsertData(query, parameters);
+                var result =  _dbCommand.UpdateAndInsertData(query, parameters);
 
                 return result > 0 ? entity : null;
             }
@@ -40,29 +40,29 @@ namespace Core.StudentManager
             }
         }
 
-        public Task<bool> Delete(int studentId)
+        public bool Delete(int studentId)
         {
             throw new System.NotImplementedException();
         }
 
-        public Task<IEnumerable<Student>> Get()
+        public IEnumerable<Student> Get()
         {
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<Student>> GetAll()
+        public IEnumerable<Student> GetAll()
         {
             throw new NotImplementedException();
         }
 
-        public async Task<Student> GetbyId(int id)
+        public Student GetbyId(int id)
         {
             try
             {
                 string query = @"SELECT * FROM [Student] s
-                                INNER JOIN StudentSubject ss on ss.StudentID = s.StudentID
-                                INNER JOIN Subject sb on sb.ID = ss.SubjectID
-                                WHERE s.StudentID = @StudentId";
+                                INNER JOIN StudentSubject ss on ss.StudentId = s.StudentId
+                                INNER JOIN Subject sb on sb.SubjectId = ss.SubjectId
+                                WHERE s.StudentId = @StudentId";
                 List<SqlParameter> parameters = new List<SqlParameter>();
 
                 parameters.Add(new SqlParameter("@StudentId", id));
@@ -70,12 +70,12 @@ namespace Core.StudentManager
                 Model.Student student = new Model.Student();
                 List<StudentSubject> allsubjects = new List<StudentSubject>();
 
-                var dt = await _dbCommand.GetDataWithConditions(query, parameters);
+                var dt =  _dbCommand.GetDataWithConditions(query, parameters);
 
                 if (dt.Rows.Count > 0) { 
                     foreach (DataRow row in dt.Rows)
                     { 
-                        student.Id = Convert.ToInt32(row["StudentID"]);
+                        student.Id = Convert.ToInt32(row["StudentId"]);
                         student.Surname = row["Surname"].ToString();
                         student.Name = row["Name"].ToString();
                         student.GuardianName = row["GuardianName"].ToString();
@@ -83,7 +83,7 @@ namespace Core.StudentManager
                         student.NID = row["NID"].ToString();
                         student.DateOfBirth = DateTime.Parse(row["DateOfBirth"].ToString());
                         student.PhoneNumber = row["PhoneNumber"].ToString();
-                        allsubjects.Add(new StudentSubject(Convert.ToInt32(row["StudentID"]), Convert.ToInt32(row["SubjectID"]), Convert.ToInt32(row["StudentSubjectID"]), new Subject(Convert.ToInt32(row["ID"]), row["SubjectName"].ToString()), row["Grade"].ToString()));
+                        allsubjects.Add(new StudentSubject(Convert.ToInt32(row["StudentId"]), Convert.ToInt32(row["SubjectId"]), Convert.ToInt32(row["StudentSubjectId"]), new Subject(Convert.ToInt32(row["SubjectId"]), row["SubjectName"].ToString()), row["Grade"].ToString()));
                         student.Subjects = allsubjects;
                     }
                     return student;
@@ -101,7 +101,7 @@ namespace Core.StudentManager
             }
         }
 
-        public Task<Student> Update(Student entity)
+        public Student Update(Student entity)
         {
             throw new NotImplementedException();
         }

@@ -7,8 +7,8 @@ namespace Interface
 {
     public interface IDbCommand
     {
-        Task<DataTable> GetData(string query);
-        Task<int> UpdateAndInsertData(string query, List<SqlParameter> parameters);
-        Task<DataTable> GetDataWithConditions(string query, List<SqlParameter> parameters);
+        DataTable GetData(string query);
+        int UpdateAndInsertData(string query, List<SqlParameter> parameters);
+        DataTable GetDataWithConditions(string query, List<SqlParameter> parameters);
     }
 }

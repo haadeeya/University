@@ -17,14 +17,14 @@ input {
 
 
 input[type="submit"] {
-     padding: 0.50rem 0.25rem 0.50rem 0.25rem;
-     margin-top: 1rem;
-     width: 100%;
-     font-family: 'Noto Sans';
-     background-color: rgb(24, 78, 165);
-     color: white;
-     border:none;
-     border-radius:5px;
+        padding: 0.50rem 0.25rem 0.50rem 0.25rem;
+        margin-top: 1rem;
+        width: 100%;
+        font-family: 'Noto Sans';
+        background-color: rgb(24, 78, 165);
+        color: white;
+        border: none;
+        border-radius: 5px;
 }
 
 .container {
@@ -41,8 +41,8 @@ input[type="submit"] {
 }
 
 .login-form, .registration-form {
-    /* display: flex; */
-    /* flex-direction: column; */
+     display: flex; 
+     flex-direction: column; 
     background-color: white;
     height: 30rem;
     /* width: 100%; */
@@ -61,6 +61,7 @@ input[type="submit"] {
     text-align: center;
     justify-content: center;
 }
+
 .col {
     margin-bottom: 1rem;
     margin-left: 1rem;

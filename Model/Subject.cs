@@ -4,11 +4,11 @@ namespace Model
 {
     public class Subject
     {
-        public int Id { get; set; }
+        public int SubjectId { get; set; }
         public string SubjectName { get; set; }
         public Subject(int id, string name)
         {
-            Id = id;
+            SubjectId = id;
             SubjectName = name;
         }
     }

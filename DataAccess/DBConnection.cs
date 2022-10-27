@@ -1,78 +1,53 @@
 ﻿using static DataAccess.DBConnection;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
+using System.Configuration;
 
 namespace DataAccess
 {
-        public class DBConnection : IDBConnection
+    public class DBConnection : IDBConnection
+    {
+        public string connectionString;
+
+        public SqlConnection Connection { get; set; }
+
+        public DBConnection()
         {
+            connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
 
-            public const string connectionString = @"server=localhost;database=StudentRegistration;uid=wbpoc;pwd=sql@tfs2008";
+            Connection = new SqlConnection(connectionString);
 
+            OpenConnection();
+        }
 
-            public SqlConnection Connection { get; set; }
-
-
-
-            public DBConnection()
-
+        public void/*Task*/ OpenConnection()
+        {
+            try
             {
-
-                Connection = new SqlConnection(connectionString);
-
-                OpenConnection();
-
-            }
-
-
-
-            public Task OpenConnection()
-
-            {
-
-                try
-
+                if (Connection.State == System.Data.ConnectionState.Open)
                 {
-
-                    if (Connection.State == System.Data.ConnectionState.Open)
-
-                    {
-
-                        Connection.Close();
-
-                    }
-
-                    // without this, authentication works but update needs this to be able to work correctly !!!
-
-                    Connection.Open();
-
-                }
-
-                catch (SqlException ex)
-
-                {
-                    throw ex;
-                }
-
-                return Task.CompletedTask;
-            }
-
-
-            public Task CloseConnection()
-
-            {
-
-                if (Connection != null && Connection.State == System.Data.ConnectionState.Open)
-
-                {
-
                     Connection.Close();
-
-                    Connection.Dispose();
-
                 }
-                return Task.CompletedTask;
+
+                Connection.Open();
+            }
+
+            catch (SqlException ex)
+            {
+                throw ex;
+            }
         }
 
+
+        public void/*Task*/ CloseConnection()
+        {
+            if (Connection != null && Connection.State == System.Data.ConnectionState.Open)
+            {
+                Connection.Close();
+                Connection.Dispose();
+            }
+            //return Task.CompletedTask;
         }
+
+    }
 }
