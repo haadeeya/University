@@ -14,28 +14,28 @@ namespace Core.SubjectManager
         {
             _subjectDal = new SubjectDal();
         }
-        public Subject Create(Subject entity)
+        public Task<Subject> Create(Subject entity)
         {
             throw new NotImplementedException();
         }
 
-        public bool Delete(int id)
+        public Task<bool> Delete(int id)
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<Subject> Get()
+        public Task<IEnumerable<Subject>> Get()
         {
             var allsubjects =  _subjectDal.Get();
             return allsubjects;
         }
 
-        public Subject GetbyId(int id)
+        public Task<Subject> GetbyId(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Subject Update(Subject entity)
+        public Task<Subject> Update(Subject entity)
         {
             throw new NotImplementedException();
         }

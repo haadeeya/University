@@ -3,7 +3,7 @@
     event.preventDefault();
 
     var xmlHttp = new XMLHttpRequest();
-    xmlHttp.open("GET", "/Home/GetStudent", false);
+    xmlHttp.open("GET", "/Student/GetStudent", false);
     xmlHttp.send(null);
     var jsonobj = JSON.parse(xmlHttp.responseText);
     console.log(jsonobj);
@@ -23,11 +23,20 @@
     document.getElementById("emailaddress").textContent = jsonobj.EmailAddress;
     document.getElementById("phonenum").textContent = jsonobj.PhoneNumber;
     document.getElementById("guardianname").textContent = jsonobj.GuardianName;
-
     for (var i = 0; i < jsonobj.Subjects.length; i++) {
+        let subject = `
+            <div class="property-name">${jsonobj.Subjects[i].Subject.SubjectName}</div>
+            <div class="property-value">${jsonobj.Subjects[i].Grade}</div>
+`
+        document.getElementById("subjects").innerHTML += subject;
+        document.getElementById("guardianname").textContent
         console.log(jsonobj.Subjects[i].Subject.SubjectName);
         console.log(jsonobj.Subjects[i].Grade);
-        document.getElementsByClassName("subjects").textContent = jsonobj.Subjects[i].Subject.SubjectName;
     }
+
+    
+
+
+    
 
 }

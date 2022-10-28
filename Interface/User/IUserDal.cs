@@ -8,14 +8,14 @@ namespace Interface
 {
     public interface IUserDal : IRepositoryDal<User>
     {
-        IEnumerable<User> Get();
-        User GetbyId(int id);
-        DataTable Get(Login login);
+        Task<IEnumerable<User>> Get();
+        Task<User> GetbyId(int id);
 
-        User Create(User user);
+        Task<User> Create(User user);
 
-        User Update(User user);
+        Task<User> Update(User user);
 
-        bool Delete(int userId);
+        Task<bool> Delete(int userId);
+        Task<DataTable> Get(Login login);
     }
 }

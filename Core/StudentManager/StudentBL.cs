@@ -1,6 +1,7 @@
 ﻿using Interface.Repository;
 using Model;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Core.StudentManager
 {
@@ -12,63 +13,39 @@ namespace Core.StudentManager
             _studentDal = new StudentDal();
         }
 
-        public Student Create(Student student)
+        public Task<Student> Create(Student student)
         {
             throw new System.NotImplementedException();
         }
 
-        public bool Delete(int studentId)
+        public async Task<bool> Delete(int studentId)
         {
-            var deletestudent =  _studentDal.Delete(studentId);
-            return deletestudent = true ? true : false;
+            var isDeleted = await _studentDal.Delete(studentId);
+            return isDeleted = true ? true : false;
         }
 
-        public IEnumerable<Student> Get()
+        public Task<IEnumerable<Student>> Get()
         {
-            var allStudents = _studentDal.Get();
+            throw new System.NotImplementedException();
+        }
+
+        public async Task<IEnumerable<Student>> GetAll()
+        {
+            var allStudents = await _studentDal.Get();
             return allStudents;
         }
 
-        public Student GetbyId(int id)
+        public async Task<Student> GetbyId(int id)
         {
-            var currentStudent = _studentDal.GetbyId(id);
+            var currentStudent = await _studentDal.GetbyId(id);
             return currentStudent;
         }
 
-        public Student Update(Student student)
+        public async Task<Student> Update(Student student)
         {
-            var updatestudent = _studentDal.Create(student);
+            var updatestudent = await _studentDal.Create(student);
             return updatestudent;
         }
-        //public Model.Student Create(Model.Student student)
-        //{
-        //    var newstudent = _studentDal.Create(student);
-        //    return newstudent;
-        //}
-
-        //public bool Delete(int studentId)
-        //{
-        //    var deletestudent = _studentDal.Delete(studentId);
-        //    return deletestudent = true ? true : false;
-        //}
-
-        //public Model.Student GetbyId(int id)
-        //{
-        //    var currentStudent = _studentDal.GetbyId(id);
-        //    return currentStudent;
-        //}
-
-        //public IEnumerable<Model.Student> Get()
-        //{
-        //    var allStudents = _studentDal.Get();
-        //    return allStudents;
-        //}
-
-        //public Model.Student Update(Model.Student student)
-        //{
-        //    var updatestudent = _studentDal.Create(student);
-        //    return updatestudent;
-        //}
 
     }
 }

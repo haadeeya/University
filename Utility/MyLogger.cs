@@ -8,8 +8,8 @@ namespace University.Utility
 {
     public class MyLogger : ILogger
     {
-        private static MyLogger instance; //singleton instance of the Logger class.
-        private static Logger logger; //static instance of Nlog logger
+        private static MyLogger instance; 
+        private static Logger logger; 
 
         public MyLogger()
         {

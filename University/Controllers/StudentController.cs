@@ -4,45 +4,43 @@ using Core.SubjectManager;
 using Interface;
 using Interface.Repository;
 using Model;
-using System.Collections.Generic;
-using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 
 namespace University.Controllers
 {
-    public class HomeController : Controller
+    public class StudentController : Controller
     {
         private readonly IUserBL _userBL;
         private readonly IRepositoryBL<Student> _studentBL;
         private readonly IRepositoryBL<Subject> _subjectBL;
-        public HomeController()
+        public StudentController()
         {
             _userBL = new UserBL();
             _studentBL = new StudentBL();
             _subjectBL = new SubjectBL();
         }
-        public ActionResult Index()
+
+        public async Task<ActionResult> Index()
         {
             var loggedUser = Session["CurrentUser"] as User;
 
             if (loggedUser != null && loggedUser.Role == 0)
             {
-                var currentStudent =  _studentBL.GetbyId(loggedUser.Id);
+                var currentStudent = await _studentBL.GetbyId(loggedUser.Id);
                 if (currentStudent != null)
                 {
                     return View(currentStudent);
                 }
-                
             }
-
-            return Json(new { error = "Student Profile doesn't exist." }, JsonRequestBehavior.AllowGet);
+            return RedirectToAction("CreateProfile");
         }
 
         [HttpGet]
-        public JsonResult GetStudent()
+        public async Task<JsonResult> GetStudent()
         {
             var loggedUser = Session["CurrentUser"] as User;
-            var student = _studentBL.GetbyId(loggedUser.Id);
+            var student = await _studentBL.GetbyId(loggedUser.Id);
             return Json(student, JsonRequestBehavior.AllowGet);
         }
 
@@ -53,29 +51,14 @@ namespace University.Controllers
         }
 
         [HttpGet]
-        public JsonResult GetSubjects()
+        public async Task<JsonResult> GetSubjects()
         {
-            List<Subject> subjectslist =  _subjectBL.Get().ToList();
-            //var json_allsubjects = JsonSerializer.Serialize(subjectslist);
+            var subjectslist =  await _subjectBL.Get();
             return Json(subjectslist, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult StudentProfile()
         {
-            return View();
-        }
-
-        public ActionResult About()
-        {
-            ViewBag.Message = "Your application description page.";
-
-            return View();
-        }
-
-        public ActionResult Contact()
-        {
-            ViewBag.Message = "Your contact page.";
-
             return View();
         }
     }

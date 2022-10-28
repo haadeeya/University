@@ -1,11 +1,10 @@
 ﻿using DataAccess;
-using Interface;
 using Interface.Repository;
 using Model;
 using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Data;
+using System.Data.SqlClient;
 using System.Threading.Tasks;
 using University.Utility;
 using IDbCommand = Interface.IDbCommand;
@@ -19,17 +18,17 @@ namespace Core.SubjectManager
         {
             _dbCommand = new DBCommand();
         }
-        public Subject Create(Subject entity)
+        public Task<Subject> Create(Subject entity)
         {
             throw new NotImplementedException();
         }
 
-        public bool Delete(int id)
+        public Task<bool> Delete(int id)
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<Subject> Get()
+        public async Task<IEnumerable<Subject>> Get()
         {
             try
             {
@@ -39,7 +38,7 @@ namespace Core.SubjectManager
                 Subject thissubject;
                 List<Subject> allsubjects = new List<Subject>();
 
-                var dt =  _dbCommand.GetData(query);
+                var dt =  await _dbCommand.GetData(query);
 
                 if (dt.Rows.Count > 0)
                 {
@@ -55,19 +54,19 @@ namespace Core.SubjectManager
                     return null;
                 }
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                MyLogger.GetInstance().Error($"Error {ex.Message}");
-                return null;
+                MyLogger.GetInstance().Error($"Error {exception.Message}");
+                throw;
             }
         }
 
-        public Subject GetbyId(int id)
+        public Task<Subject> GetbyId(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Subject Update(Subject entity)
+        public Task<Subject> Update(Subject entity)
         {
             throw new NotImplementedException();
         }

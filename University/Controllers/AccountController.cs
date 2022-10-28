@@ -1,6 +1,7 @@
 ﻿using Core.Registration;
 using Interface;
 using Model;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using System.Web.Security;
 using University.Utility;
@@ -21,26 +22,20 @@ namespace University.Controllers
         }
 
         [HttpPost]
-        public JsonResult Login(Login data)
+        public async Task<JsonResult> Login(Login data)
         {
             MyLogger.GetInstance().Info("Entering the Account Controller for login");
-
             if (!ModelState.IsValid)
             {
                 return Json(new { error = "Invalid data" }, JsonRequestBehavior.AllowGet);
             }
-
-            var user =  _userBL.Authenticate(data);
-
+            var user =  await _userBL.Authenticate(data);
             if (user == null)
             {
                 return Json(new { error = "Password and username do not match or user does not exist." }, JsonRequestBehavior.AllowGet);
             }
-
             this.Session["CurrentUser"] = user;
-            this.Session["Username"] = user.Username;
-
-            return Json(new { url = Url.Action("Index", "Home") }, JsonRequestBehavior.AllowGet);
+            return Json(new { url = Url.Action("Index", "Student") }, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult Register()
@@ -48,7 +43,6 @@ namespace University.Controllers
 
             return View();
         }
-
 
         [HttpPost]
         public JsonResult Register(User user)
@@ -65,14 +59,12 @@ namespace University.Controllers
                 this.Session["CurrentUser"] = user;
                 this.Session["Username"] = user.Username;
 
-                return Json(new { url = Url.Action("Index", "Home") }, JsonRequestBehavior.AllowGet);
+                return Json(new { url = Url.Action("Index", "Student") }, JsonRequestBehavior.AllowGet);
             }
             else
             {
                 return Json(new { error = "Please enter your details properly." }, JsonRequestBehavior.AllowGet);
             }
-
-            
 
         }
 
@@ -83,11 +75,17 @@ namespace University.Controllers
 
             return RedirectToAction("Login");
         }
-
-        // GET: Account
         public ActionResult Index()
         {
             return View();
         }
+
+        //private bool ValidateUser(Login login)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        return true;
+        //    }
+        //}
     }
 }

@@ -5,8 +5,8 @@ namespace DataAccess
 {
     public interface IDBConnection
     {
-         /*Task*/ void OpenConnection();
-         /*Task*/ void CloseConnection();
+        Task OpenConnection();
+        Task CloseConnection();
         SqlConnection Connection { get; set; }
     }
 }

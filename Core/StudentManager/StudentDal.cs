@@ -1,5 +1,4 @@
 ﻿using DataAccess;
-using Interface;
 using Interface.Repository;
 using Model;
 using System;
@@ -18,7 +17,7 @@ namespace Core.StudentManager
         {
             _dbCommand = new DBCommand();
         }
-        public Student Create(Student entity)
+        public async Task<Student> Create(Student entity)
         {
             try
             {
@@ -29,7 +28,7 @@ namespace Core.StudentManager
                 parameters.Add(new SqlParameter("@Email", entity.EmailAddress));
 
 
-                var result =  _dbCommand.UpdateAndInsertData(query, parameters);
+                var result =  await _dbCommand.UpdateAndInsertData(query, parameters);
 
                 return result > 0 ? entity : null;
             }
@@ -40,22 +39,17 @@ namespace Core.StudentManager
             }
         }
 
-        public bool Delete(int studentId)
+        public Task<bool> Delete(int studentId)
         {
             throw new System.NotImplementedException();
         }
 
-        public IEnumerable<Student> Get()
+        public Task<IEnumerable<Student>> Get()
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<Student> GetAll()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Student GetbyId(int id)
+        public async Task<Student> GetbyId(int id)
         {
             try
             {
@@ -67,10 +61,10 @@ namespace Core.StudentManager
 
                 parameters.Add(new SqlParameter("@StudentId", id));
 
-                Model.Student student = new Model.Student();
+                Student student = new Student();
                 List<StudentSubject> allsubjects = new List<StudentSubject>();
 
-                var dt =  _dbCommand.GetDataWithConditions(query, parameters);
+                var dt =  await _dbCommand.GetDataWithConditions(query, parameters);
 
                 if (dt.Rows.Count > 0) { 
                     foreach (DataRow row in dt.Rows)
@@ -94,14 +88,14 @@ namespace Core.StudentManager
                 }
                 
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                MyLogger.GetInstance().Error($"Error {ex.Message}");
-                throw ex;
+                MyLogger.GetInstance().Error($"Error {exception.Message}");
+                throw;
             }
         }
 
-        public Student Update(Student entity)
+        public Task<Student> Update(Student entity)
         {
             throw new NotImplementedException();
         }

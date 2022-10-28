@@ -18,7 +18,7 @@ namespace DataAccess
             OpenConnection();
         }
 
-        public void/*Task*/ OpenConnection()
+        public Task OpenConnection()
         {
             try
             {
@@ -34,18 +34,18 @@ namespace DataAccess
             {
                 throw ex;
             }
+            return Task.CompletedTask;
         }
 
 
-        public void/*Task*/ CloseConnection()
+        public Task CloseConnection()
         {
             if (Connection != null && Connection.State == System.Data.ConnectionState.Open)
             {
                 Connection.Close();
                 Connection.Dispose();
             }
-            //return Task.CompletedTask;
+            return Task.CompletedTask;
         }
-
     }
 }
