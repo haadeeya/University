@@ -14,9 +14,7 @@ namespace DataAccess
         public DBConnection()
         {
             connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
-
             Connection = new SqlConnection(connectionString);
-
             OpenConnection();
         }
 

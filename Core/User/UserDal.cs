@@ -6,14 +6,14 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Threading.Tasks;
 using University.Utility;
+using IDbCommand = Interface.IDbCommand;
 
 namespace Core.Registration
 {
     public class UserDal : IUserDal,IRepositoryDal<User>
     {
-        private readonly Interface.IDbCommand _dbCommand;
+        private readonly IDbCommand _dbCommand;
         public UserDal()
         {
             _dbCommand = new DBCommand();

@@ -4,11 +4,8 @@ using Core.SubjectManager;
 using Interface;
 using Interface.Repository;
 using Model;
-using System.Text.Json;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Web.Mvc;
 
 namespace University.Controllers
@@ -31,17 +28,14 @@ namespace University.Controllers
             if (loggedUser != null && loggedUser.Role == 0)
             {
                 var currentStudent =  _studentBL.GetbyId(loggedUser.Id);
-                if (currentStudent == null)
-                {
-                    return Json(new { error = "Student Profile doesn't exist." }, JsonRequestBehavior.AllowGet);
-                }
-                else
+                if (currentStudent != null)
                 {
                     return View(currentStudent);
                 }
+                
             }
 
-            return View();
+            return Json(new { error = "Student Profile doesn't exist." }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpGet]
@@ -49,7 +43,6 @@ namespace University.Controllers
         {
             var loggedUser = Session["CurrentUser"] as User;
             var student = _studentBL.GetbyId(loggedUser.Id);
-            //var json_allsubjects = JsonSerializer.Serialize(subjectslist);
             return Json(student, JsonRequestBehavior.AllowGet);
         }
 

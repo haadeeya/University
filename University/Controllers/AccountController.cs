@@ -1,9 +1,6 @@
 ﻿using Core.Registration;
 using Interface;
 using Model;
-using NLog.LayoutRenderers;
-using System.Diagnostics;
-using System.Threading.Tasks;
 using System.Web.Mvc;
 using System.Web.Security;
 using University.Utility;
