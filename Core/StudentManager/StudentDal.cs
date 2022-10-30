@@ -21,11 +21,26 @@ namespace Core.StudentManager
         {
             try
             {
-                string query = @"INSERT INTO [Student](Username, Email, Password, Role) VALUES(@Username, @Email, @Password, @Role);
-                                 INSERT INTO [StudentSubject](Username, Email, Password, Role) VALUES(@Username, @Email, @Password, @Role)";
+                string query = @"INSERT INTO [Student] 
+                                 VALUES(@StudentId, @UserId, @NID, @Name, @Surname, @GuardianName, @EmailAddress, @DateOfBirth, @PhoneNumber);
+                                 INSERT INTO [StudentSubject] VALUES(@SStudentId, @SubjectId, @Grade)";
                 List<SqlParameter> parameters = new List<SqlParameter>();
 
-                parameters.Add(new SqlParameter("@Email", entity.EmailAddress));
+                parameters.Add(new SqlParameter("@StudentId", entity.Id));
+                parameters.Add(new SqlParameter("@UserId", entity.UserId));
+                parameters.Add(new SqlParameter("@NID", entity.NID));
+                parameters.Add(new SqlParameter("@Name", entity.Name));
+                parameters.Add(new SqlParameter("@Surname", entity.Surname));
+                parameters.Add(new SqlParameter("@GuardianName", entity.GuardianName));
+                parameters.Add(new SqlParameter("@EmailAddress", entity.EmailAddress));
+                parameters.Add(new SqlParameter("@DateOfBirth", entity.DateOfBirth));
+                parameters.Add(new SqlParameter("@PhoneNumber", entity.PhoneNumber));
+                foreach(var subject in entity.Subjects)
+                {
+                    parameters.Add(new SqlParameter("@SStudentId", subject.StudentId));
+                    parameters.Add(new SqlParameter("@SubjectId", subject.SubjectId));
+                    parameters.Add(new SqlParameter("@Grade", subject.Grade));
+                }
 
 
                 var result =  await _dbCommand.UpdateAndInsertData(query, parameters);

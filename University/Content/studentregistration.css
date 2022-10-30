@@ -3,7 +3,20 @@
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
 }
+.item {
+    width: 100%
+}
 
+.dropdowncontainer {
+    display: flex;
+    flex-wrap: wrap;
+    
+}
+
+.dropdowncontainer > div {
+    flex: 100%;
+    margin-bottom: 5px;
+}
 
 .flex {
     display: flex;

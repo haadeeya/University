@@ -6,6 +6,9 @@ namespace Model
     {
         public int SubjectId { get; set; }
         public string SubjectName { get; set; }
+
+        public Subject() { }
+
         public Subject(int id, string name)
         {
             SubjectId = id;

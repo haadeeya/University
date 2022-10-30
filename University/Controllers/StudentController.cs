@@ -50,6 +50,27 @@ namespace University.Controllers
             return View();
         }
 
+        [HttpPost]
+        public async Task<JsonResult> CreateProfile(Student student)
+        {
+            if (ModelState.IsValid)
+            {
+                var loggedUser = Session["CurrentUser"] as User;
+                student.Id = loggedUser.Id;
+                student.UserId = loggedUser.Id;
+                foreach(var subject in student.Subjects)
+                {
+                    subject.StudentId = student.Id;
+                }
+                var newstudent = await _studentBL.Create(student);
+                if (newstudent != null)
+                {
+                    return Json(new {url = Url.Action("Index", "Student") });
+                }
+            }
+            return null;
+        }
+
         [HttpGet]
         public async Task<JsonResult> GetSubjects()
         {

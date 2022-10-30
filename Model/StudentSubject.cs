@@ -14,6 +14,8 @@ namespace Model
         public Subject Subject { get; set; }    
         public string Grade { get; set; }
 
+        public StudentSubject() { }
+
         public StudentSubject(int studentId, int subjectId,int studentSubjectId, Subject subject, string grade)
         {
             StudentId = studentId;

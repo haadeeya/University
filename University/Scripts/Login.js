@@ -7,7 +7,6 @@
 function sendData() {
     const XHR = new XMLHttpRequest();
 
-    // Define what happens on successful data submission
     XHR.addEventListener("load", (event) => {
         let data = JSON.parse(event.target.responseText);
 
@@ -18,12 +17,10 @@ function sendData() {
         }
     });
 
-    // Define what happens in case of error
     XHR.addEventListener("error", (event) => {
         alert('Oops! Something went wrong.');
     });
     //debugger;
-    // Set up our request
     XHR.open("POST", "/Account/Login");
     var username = document.getElementById("username").value;
     var password = document.getElementById("password").value;
@@ -34,6 +31,5 @@ function sendData() {
 
     console.log(data);
 
-    // The data sent is what the user provided in the form
     XHR.send(data);
 }

@@ -13,9 +13,10 @@ namespace Core.StudentManager
             _studentDal = new StudentDal();
         }
 
-        public Task<Student> Create(Student student)
+        public async Task<Student> Create(Student student)
         {
-            throw new System.NotImplementedException();
+            var newstudent = await _studentDal.Create(student);
+            return newstudent != null ? newstudent : null;
         }
 
         public async Task<bool> Delete(int studentId)

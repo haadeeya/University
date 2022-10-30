@@ -12,34 +12,106 @@
         option.text = jsonobj[i].SubjectName;
         option.value = jsonobj[i].SubjectId;
         console.log(jsonobj[i]);
-        var select = document.getElementById("subjectname");
+        var select = document.getElementById("subjectname0");
         console.log(select);
         select.appendChild(option);
-
     }
 }
 
+let count = 1;
 function addSubject() {
     event.preventDefault();
-    let subjectresult = `<div id="dropdown" onclick='loadDropdown()'>
-                        <div class="text-container">
-                            <label for="subject">Subject Name:</label>
-                            <select id="subjectname" name="user_subject">
-                            </select>
-                        </div>
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.open("GET", "/Student/GetSubjects", false);
+    xmlHttp.send(null);
+    var jsonobj = JSON.parse(xmlHttp.responseText);
+    console.log(count);
+    var newselect = `<select id="subjectname${count}" name="user_subject">`
+    for (var i = 0; i < jsonobj.length; i++) {
+        //debugger;
+        newselect += `<option value="${jsonobj[i].SubjectId}">${jsonobj[i].SubjectName}</option >`
+    }
+    newselect +=`</select>`
+    let subjectresult = `<div class="dropdowncontainer" id="dropdown` + count +`">
+                            <button onclick="removeSubject(`+count+`)">-</button>
+                            <div class="item">
+                                <label for="subject">Subject Name:</label>` + newselect + `
+                            </div>
 
-                        <div class="text-container">
-                            <label for="grade">Grade:</label>
-                            <select id="grade" name="user_grade">
-                                <option value="A">A</option>
-                                <option value="B">B</option>
-                                <option value="C">C</option>
-                                <option value="D">D</option>
-                                <option value="E">E</option>
-                                <option value="F">F</option>
-                            </select>
-                        </div>
-                    </div>`
-    document.getElementById("dropdown").innerHTML += subjectresult;
+                            <div class="item">
+                                <label for="grade">Grade:</label>
+                                <select id="grade${count}" name="user_grade">
+                                    <option value="A">A</option>
+                                    <option value="B">B</option>
+                                    <option value="C">C</option>
+                                    <option value="D">D</option>
+                                    <option value="E">E</option>
+                                    <option value="F">F</option>
+                                </select>
+                           </div>
+                       </div>`
+    document.getElementById('dropdown').innerHTML += subjectresult;
+    count++;
 }
+
+function removeSubject(count) {
+    event.preventDefault();
+    document.getElementById('dropdown' + count).remove();
+    count--;
+}
+
+function createProfile(event) {
+    event.preventDefault();
+    var subjects=[];
+    var subject;
+    var studentsubject;
+
+    for (var i = 0; i < count; i++) {
+        console.log(document.getElementById('subjectname' + i).value);
+        subject = {
+            'SubjectId': document.getElementById('subjectname' + i).value,
+            'SubjectName': document.getElementById('subjectname' + i).options[document.getElementById('subjectname' + i).selectedIndex].text,
+        };
+        studentsubject = {
+            'SubjectId': document.getElementById('subjectname' + i).value,
+            'Subject': subject,
+            'Grade': document.getElementById('grade' + i).value
+        };
+        subjects.push(studentsubject);
+    }
+
+    let student = {
+        'Name': document.getElementById("fname").value,
+        'Surname': document.getElementById("lname").value,
+        'NID': document.getElementById("nid").value,
+        'GuardianName': document.getElementById("gname").value, 
+        'EmailAddress': document.getElementById("email").value,
+        'DateOfBirth': document.getElementById("dateofbirth").value,
+        'PhoneNumber': document.getElementById("phonenumber").value,
+        'Subjects': subjects
+    };
+
+    var url = "/Student/CreateProfile";
+    var request = new XMLHttpRequest();
+
+    request.open("POST", url, false);
+    request.setRequestHeader("Content-Type", "application/json");
+    request.onreadystatechange = function () {
+        if (request.readyState == XMLHttpRequest.DONE) {
+            var response = JSON.parse(request.responseText);
+            if (response.result) {
+                toastr.success("Student successfully added");
+                window.location = response.url;
+            }
+            else {
+                toastr.error("Unable to add student");
+                return false;
+            }
+        }
+    };
+    request.send(JSON.stringify(student));
+}
+
+
+
 
