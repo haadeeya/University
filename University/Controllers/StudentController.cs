@@ -27,7 +27,7 @@ namespace University.Controllers
 
             if (loggedUser != null && loggedUser.Role == 0)
             {
-                var currentStudent = await _studentBL.GetbyId(loggedUser.Id);
+                var currentStudent = await _studentBL.GetById(loggedUser.Id);
                 if (currentStudent != null)
                 {
                     return View(currentStudent);
@@ -40,7 +40,7 @@ namespace University.Controllers
         public async Task<JsonResult> GetStudent()
         {
             var loggedUser = Session["CurrentUser"] as User;
-            var student = await _studentBL.GetbyId(loggedUser.Id);
+            var student = await _studentBL.GetById(loggedUser.Id);
             return Json(student, JsonRequestBehavior.AllowGet);
         }
 
@@ -65,7 +65,7 @@ namespace University.Controllers
                 var newstudent = await _studentBL.Create(student);
                 if (newstudent != null)
                 {
-                    return Json(new {url = Url.Action("Index", "Student") });
+                    return Json(new { result = true, url = Url.Action("Index", "Student") });
                 }
             }
             return null;

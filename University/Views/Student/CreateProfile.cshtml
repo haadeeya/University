@@ -5,9 +5,14 @@
     <title>Create Profile</title>
     <link rel="stylesheet" href="~/Content/studentregistration.css">
     <script src="~/Scripts/createprofile.js" type="text/javascript"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    @*https://codeseven.github.io/toastr/*@
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
 </head>
 <body onload="loadDropdown()" onsubmit="createProfile(event)">
     <div class="container">
+        <span id="error"></span>
             <form>
                 <h1> Create Profile </h1>
 
@@ -22,36 +27,36 @@
                         </div>
                         <div class="text-container">
                             <label for="surname">Last Name</label>
-                            <input type="text" class="textbox" id="lname" name="user_surname">
+                            <input type="text" class="textbox" id="lname" name="user_surname" required>
                         </div>
                     </div>
 
                     <div class="flex">
                         <div class="text-container">
                             <label for="nid">NID</label>
-                            <input type="text" class="textbox" id="nid" name="user_nid">
+                            <input type="text" class="textbox" id="nid" name="user_nid" required>
                         </div>
                         <div class="text-container">
                             <label for="name">Guardian Name</label>
-                            <input type="text" id="gname" name="user_guardianName">
+                            <input type="text" id="gname" name="user_guardianName" required>
                         </div>
                     </div>
 
                     <div class="flex">
                         <div class="text-container">
                             <label for="email">Email</label>
-                            <input type="email" id="email" name="user_email">
+                            <input type="email" id="email" name="user_email" required>
                         </div>
                         <div class="text-container">
                             <label for="phonenumber">Phone Number</label>
-                            <input type="text" id="phonenumber" name="user_phonenumber">
+                            <input type="text" id="phonenumber" name="user_phonenumber" required>
                         </div>
                     </div>
 
                     <div class="flex">
                         <div class="text-container">
                             <label for="dateofbirth">Date of Birth</label>
-                            <input type="date" id="dateofbirth" name="user_dateofbirth">
+                            <input type="date" id="dateofbirth" name="user_dateofbirth" required>
                         </div>
                     </div>
 

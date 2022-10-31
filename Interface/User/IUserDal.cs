@@ -9,7 +9,7 @@ namespace Interface
     public interface IUserDal : IRepositoryDal<User>
     {
         Task<IEnumerable<User>> Get();
-        Task<User> GetbyId(int id);
+        Task<User> GetById(int id);
 
         Task<User> Create(User user);
 

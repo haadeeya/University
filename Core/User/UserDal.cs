@@ -12,7 +12,7 @@ using IDbCommand = Interface.IDbCommand;
 
 namespace Core.Registration
 {
-    public class UserDal : IUserDal,IRepositoryDal<User>
+    public class UserDal : IUserDal, IRepositoryDal<User>
     {
         private readonly IDbCommand _dbCommand;
         public UserDal()
@@ -53,7 +53,7 @@ namespace Core.Registration
             throw new NotImplementedException();
         }
 
-        public Task<User> GetbyId(int id)
+        public Task<User> GetById(int id)
         {
             throw new NotImplementedException();
         }

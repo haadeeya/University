@@ -70,7 +70,7 @@ namespace Core.Registration
             throw new NotImplementedException();
         }
 
-        public Task<User> GetbyId(int id)
+        public Task<User> GetById(int id)
         {
             throw new NotImplementedException();
         }

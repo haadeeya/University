@@ -27,15 +27,25 @@ namespace University.Controllers
             MyLogger.GetInstance().Info("Entering the Account Controller for login");
             if (!ModelState.IsValid)
             {
-                return Json(new { error = "Invalid data" }, JsonRequestBehavior.AllowGet);
+                return Json(new {result = false, error = "Invalid data" }, JsonRequestBehavior.AllowGet);
             }
             var user =  await _userBL.Authenticate(data);
             if (user == null)
             {
-                return Json(new { error = "Password and username do not match or user does not exist." }, JsonRequestBehavior.AllowGet);
+                return Json(new { result = false, error = "Password and username do not match or user does not exist." }, JsonRequestBehavior.AllowGet); ;  ;
             }
             this.Session["CurrentUser"] = user;
+            var loggedUser = Session["CurrentUser"] as User;
+            var role = (int)loggedUser.Role;
+            if (role == (int)Role.Admin)
+            {
+                return Json(new { url = Url.Action("AdminHome", "Admin") }, JsonRequestBehavior.AllowGet);
+                
+            }
+            
             return Json(new { url = Url.Action("Index", "Student") }, JsonRequestBehavior.AllowGet);
+            
+            
         }
 
         public ActionResult Register()
@@ -51,7 +61,6 @@ namespace University.Controllers
             {
                 return Json(new { error = "Invalid data" }, JsonRequestBehavior.AllowGet);
             }
-
             var result =  _userBL.Create(user);
 
             if(result != null)
@@ -72,6 +81,7 @@ namespace University.Controllers
         {
             FormsAuthentication.SignOut();
             Session.Abandon();
+            Session.Clear();
 
             return RedirectToAction("Login");
         }

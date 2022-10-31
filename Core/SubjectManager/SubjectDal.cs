@@ -61,7 +61,7 @@ namespace Core.SubjectManager
             }
         }
 
-        public Task<Subject> GetbyId(int id)
+        public Task<Subject> GetById(int id)
         {
             throw new NotImplementedException();
         }

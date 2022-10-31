@@ -13,45 +13,60 @@ namespace Core.StudentManager
     public class StudentDal : IRepositoryDal<Student>
     {
         private readonly Interface.IDbCommand _dbCommand;
+
         public StudentDal()
         {
             _dbCommand = new DBCommand();
         }
+
         public async Task<Student> Create(Student entity)
         {
+            string insertStudentQuery = @"INSERT INTO [Student]
+                                 VALUES(@StudentId, @UserId, @Name, @Surname, @NID, @GuardianName, @EmailAddress, @DateOfBirth, @PhoneNumber);";
+            string insertSubjectQuery = @"INSERT INTO [StudentSubject] VALUES(@StudentId, @SubjectId, @Grade);";
+
+
+            IDbTransaction transaction = _dbCommand.Connection.BeginTransaction();
+
             try
             {
-                string query = @"INSERT INTO [Student] 
-                                 VALUES(@StudentId, @UserId, @NID, @Name, @Surname, @GuardianName, @EmailAddress, @DateOfBirth, @PhoneNumber);
-                                 INSERT INTO [StudentSubject] VALUES(@SStudentId, @SubjectId, @Grade)";
-                List<SqlParameter> parameters = new List<SqlParameter>();
+                List<SqlParameter> insertStudentParameters = new List<SqlParameter>();
+                insertStudentParameters.Add(new SqlParameter("@StudentId", entity.Id));
+                insertStudentParameters.Add(new SqlParameter("@UserId", entity.UserId));
+                insertStudentParameters.Add(new SqlParameter("@NID", entity.NID));
+                insertStudentParameters.Add(new SqlParameter("@Name", entity.Name));
+                insertStudentParameters.Add(new SqlParameter("@Surname", entity.Surname));
+                insertStudentParameters.Add(new SqlParameter("@GuardianName", entity.GuardianName));
+                insertStudentParameters.Add(new SqlParameter("@EmailAddress", entity.EmailAddress));
+                insertStudentParameters.Add(new SqlParameter("@DateOfBirth", entity.DateOfBirth));
+                insertStudentParameters.Add(new SqlParameter("@PhoneNumber", entity.PhoneNumber));
 
-                parameters.Add(new SqlParameter("@StudentId", entity.Id));
-                parameters.Add(new SqlParameter("@UserId", entity.UserId));
-                parameters.Add(new SqlParameter("@NID", entity.NID));
-                parameters.Add(new SqlParameter("@Name", entity.Name));
-                parameters.Add(new SqlParameter("@Surname", entity.Surname));
-                parameters.Add(new SqlParameter("@GuardianName", entity.GuardianName));
-                parameters.Add(new SqlParameter("@EmailAddress", entity.EmailAddress));
-                parameters.Add(new SqlParameter("@DateOfBirth", entity.DateOfBirth));
-                parameters.Add(new SqlParameter("@PhoneNumber", entity.PhoneNumber));
-                foreach(var subject in entity.Subjects)
+                await _dbCommand.UpdateAndInsertData(insertStudentQuery, insertStudentParameters, transaction);
+
+                foreach (var subject in entity.Subjects)
                 {
-                    parameters.Add(new SqlParameter("@SStudentId", subject.StudentId));
-                    parameters.Add(new SqlParameter("@SubjectId", subject.SubjectId));
-                    parameters.Add(new SqlParameter("@Grade", subject.Grade));
+                    List<SqlParameter> insertSubjectParameters = new List<SqlParameter>();
+
+                    insertSubjectParameters.Add((new SqlParameter("@StudentId", subject.StudentId)));
+                    insertSubjectParameters.Add((new SqlParameter("@SubjectId", subject.SubjectId)));
+                    insertSubjectParameters.Add((new SqlParameter("@Grade", subject.Grade)));
+
+                    await _dbCommand.UpdateAndInsertData(insertSubjectQuery, insertSubjectParameters, transaction);
                 }
 
-
-                var result =  await _dbCommand.UpdateAndInsertData(query, parameters);
-
-                return result > 0 ? entity : null;
+                transaction.Commit();
             }
-            catch (Exception ex)
+            catch
             {
-                MyLogger.GetInstance().Error($"Error {ex.Message}");
-                throw ex;
+                //transaction.Rollback();
+                throw;
             }
+            finally
+            {
+                transaction.Dispose();
+            }
+
+            return entity;
         }
 
         public Task<bool> Delete(int studentId)
@@ -64,7 +79,7 @@ namespace Core.StudentManager
             throw new NotImplementedException();
         }
 
-        public async Task<Student> GetbyId(int id)
+        public async Task<Student> GetById(int id)
         {
             try
             {
@@ -79,11 +94,12 @@ namespace Core.StudentManager
                 Student student = new Student();
                 List<StudentSubject> allsubjects = new List<StudentSubject>();
 
-                var dt =  await _dbCommand.GetDataWithConditions(query, parameters);
+                var dt = await _dbCommand.GetDataWithConditions(query, parameters);
 
-                if (dt.Rows.Count > 0) { 
+                if (dt.Rows.Count > 0)
+                {
                     foreach (DataRow row in dt.Rows)
-                    { 
+                    {
                         student.Id = Convert.ToInt32(row["StudentId"]);
                         student.Surname = row["Surname"].ToString();
                         student.Name = row["Name"].ToString();
@@ -101,7 +117,7 @@ namespace Core.StudentManager
                 {
                     return null;
                 }
-                
+
             }
             catch (Exception exception)
             {

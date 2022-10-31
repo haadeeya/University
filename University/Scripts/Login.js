@@ -11,14 +11,15 @@ function sendData() {
         let data = JSON.parse(event.target.responseText);
 
         if (data.error) {
-            alert('Oops! ' + data.error);
+            toastr.error('Oops ' + data.error);
+            return false;
         } else {
             window.location = data.url;
         }
     });
 
     XHR.addEventListener("error", (event) => {
-        alert('Oops! Something went wrong.');
+        toastr.error('Something went wrong');
     });
     //debugger;
     XHR.open("POST", "/Account/Login");

@@ -8,21 +8,20 @@ namespace Core.StudentManager
     public class StudentBL : IRepositoryBL<Student>
     {
         private readonly IRepositoryDal<Student> _studentDal;
+
         public StudentBL()
         {
             _studentDal = new StudentDal();
         }
 
-        public async Task<Student> Create(Student student)
+        public Task<Student> Create(Student student)
         {
-            var newstudent = await _studentDal.Create(student);
-            return newstudent != null ? newstudent : null;
+            return _studentDal.Create(student);
         }
 
-        public async Task<bool> Delete(int studentId)
+        public Task<bool> Delete(int studentId)
         {
-            var isDeleted = await _studentDal.Delete(studentId);
-            return isDeleted = true ? true : false;
+            return _studentDal.Delete(studentId);
         }
 
         public Task<IEnumerable<Student>> Get()
@@ -30,22 +29,19 @@ namespace Core.StudentManager
             throw new System.NotImplementedException();
         }
 
-        public async Task<IEnumerable<Student>> GetAll()
+        public Task<IEnumerable<Student>> GetAll()
         {
-            var allStudents = await _studentDal.Get();
-            return allStudents;
+            return _studentDal.Get();
         }
 
-        public async Task<Student> GetbyId(int id)
+        public Task<Student> GetById(int id)
         {
-            var currentStudent = await _studentDal.GetbyId(id);
-            return currentStudent;
+            return _studentDal.GetById(id);
         }
 
-        public async Task<Student> Update(Student student)
+        public Task<Student> Update(Student student)
         {
-            var updatestudent = await _studentDal.Create(student);
-            return updatestudent;
+            return _studentDal.Create(student);
         }
 
     }

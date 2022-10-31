@@ -33,7 +33,7 @@ function addSubject() {
     }
     newselect +=`</select>`
     let subjectresult = `<div class="dropdowncontainer" id="dropdown` + count +`">
-                            <button onclick="removeSubject(`+count+`)">-</button>
+                            <button onclick="removeSubject()">-</button>
                             <div class="item">
                                 <label for="subject">Subject Name:</label>` + newselect + `
                             </div>
@@ -54,9 +54,11 @@ function addSubject() {
     count++;
 }
 
-function removeSubject(count) {
+function removeSubject() {
     event.preventDefault();
-    document.getElementById('dropdown' + count).remove();
+    console.log("subjectname" + (count - 1));
+    var dropdown = document.getElementById("dropdown" + (count - 1));
+    dropdown.remove();
     count--;
 }
 
@@ -97,16 +99,17 @@ function createProfile(event) {
     request.open("POST", url, false);
     request.setRequestHeader("Content-Type", "application/json");
     request.onreadystatechange = function () {
-        if (request.readyState == XMLHttpRequest.DONE) {
-            var response = JSON.parse(request.responseText);
-            if (response.result) {
-                toastr.success("Student successfully added");
+        if (request.readyState == XMLHttpRequest.DONE && request.responseText != "") {
+            let response = JSON.parse(event.request.responseText);
+            //var response = JSON.parse(request.responseText);
+            if (!request.error) {
+                toastr.success("Registration successful. Redirecting User...");
                 window.location = response.url;
             }
-            else {
-                toastr.error("Unable to add student");
-                return false;
-            }
+        }
+        else {
+            toastr.error('Unable to Register student');
+            return false;
         }
     };
     request.send(JSON.stringify(student));

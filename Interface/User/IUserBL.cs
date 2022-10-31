@@ -8,7 +8,7 @@ namespace Interface
     public interface IUserBL : IRepositoryBL<User>
     {
         Task<IEnumerable<User>> Get();
-        Task<User> GetbyId(int id);
+        Task<User> GetById(int id);
         Task<User> Authenticate(Login login);
 
         Task<User> Create(User user);

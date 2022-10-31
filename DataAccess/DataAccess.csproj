@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Class1.cs" />
     <Compile Include="DBCommand.cs" />
     <Compile Include="DBConnection.cs" />
     <Compile Include="IDBConnection.cs" />
@@ -51,6 +52,14 @@
     <ProjectReference Include="..\Interface\Interface.csproj">
       <Project>{4E8CD9F0-3439-44CB-87CA-EEE8262D610E}</Project>
       <Name>Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Model\Model.csproj">
+      <Project>{B201E5F8-00FD-4CD9-855D-797841403D1D}</Project>
+      <Name>Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Utility\Utility.csproj">
+      <Project>{80634754-6E9D-4459-AEA1-D397FE7D24C2}</Project>
+      <Name>Utility</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

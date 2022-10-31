@@ -33,10 +33,4 @@
         console.log(jsonobj.Subjects[i].Subject.SubjectName);
         console.log(jsonobj.Subjects[i].Grade);
     }
-
-    
-
-
-    
-
 }
