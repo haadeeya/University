@@ -1,4 +1,5 @@
 ﻿using DataAccess;
+using Interface;
 using Interface.Repository;
 using Model;
 using System;
@@ -11,7 +12,7 @@ using IDbCommand = Interface.IDbCommand;
 
 namespace Core.SubjectManager
 {
-    public class SubjectDal : IRepositoryDal<Subject>
+    public class SubjectDal : ISubjectDAL
     {
         private readonly IDbCommand _dbCommand;
         public SubjectDal()

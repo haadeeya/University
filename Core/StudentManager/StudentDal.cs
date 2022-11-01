@@ -1,4 +1,5 @@
 ﻿using DataAccess;
+using Interface;
 using Interface.Repository;
 using Model;
 using System;
@@ -10,7 +11,7 @@ using University.Utility;
 
 namespace Core.StudentManager
 {
-    public class StudentDal : IRepositoryDal<Student>
+    public class StudentDal : IStudentDAL
     {
         private readonly Interface.IDbCommand _dbCommand;
 
@@ -21,10 +22,15 @@ namespace Core.StudentManager
 
         public async Task<Student> Create(Student entity)
         {
-            string insertStudentQuery = @"INSERT INTO [Student]
+            string insertStudentQuery = @"INSERT INTO [Student](StudentId, UserId, Name, Surname, NID, GuardianName, EmailAddress, DateOfBirth, PhoneNumber)
                                  VALUES(@StudentId, @UserId, @Name, @Surname, @NID, @GuardianName, @EmailAddress, @DateOfBirth, @PhoneNumber);";
-            string insertSubjectQuery = @"INSERT INTO [StudentSubject] VALUES(@StudentId, @SubjectId, @Grade);";
+            string insertSubjectQuery = @"INSERT INTO [StudentSubject](StudentId, SubjectId, Grade) VALUES(@StudentId, @SubjectId, @Grade);";
 
+
+            if (_dbCommand.Connection.State == ConnectionState.Closed)
+            {
+                _dbCommand.Connection.Open();
+            }
 
             IDbTransaction transaction = _dbCommand.Connection.BeginTransaction();
 
@@ -58,7 +64,7 @@ namespace Core.StudentManager
             }
             catch
             {
-                //transaction.Rollback();
+                transaction.Rollback();
                 throw;
             }
             finally
@@ -66,6 +72,7 @@ namespace Core.StudentManager
                 transaction.Dispose();
             }
 
+            _dbCommand.Connection.Close();
             return entity;
         }
 

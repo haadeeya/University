@@ -100,8 +100,7 @@ function createProfile(event) {
     request.setRequestHeader("Content-Type", "application/json");
     request.onreadystatechange = function () {
         if (request.readyState == XMLHttpRequest.DONE && request.responseText != "") {
-            let response = JSON.parse(event.request.responseText);
-            //var response = JSON.parse(request.responseText);
+            let response = JSON.parse(request.responseText);
             if (!request.error) {
                 toastr.success("Registration successful. Redirecting User...");
                 window.location = response.url;

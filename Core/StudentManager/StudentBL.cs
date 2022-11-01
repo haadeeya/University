@@ -1,13 +1,14 @@
 ﻿using Interface.Repository;
+using Interface;
 using Model;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Core.StudentManager
 {
-    public class StudentBL : IRepositoryBL<Student>
+    public class StudentBL : IStudentBL
     {
-        private readonly IRepositoryDal<Student> _studentDal;
+        private readonly IStudentDAL _studentDal;
 
         public StudentBL()
         {

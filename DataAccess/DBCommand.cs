@@ -26,6 +26,7 @@ namespace DataAccess
         public async Task<DataTable> GetData(string query)
         {
             DataTable dt = new DataTable();
+
             using (SqlCommand cmd = new SqlCommand(query, _dbConnection.Connection))
             {
                 cmd.CommandType = CommandType.Text;
@@ -34,17 +35,22 @@ namespace DataAccess
                     sda.Fill(dt);
                 }
             }
-            await _dbConnection.CloseConnection();
+
             return dt;
         }
 
         public async Task<int> UpdateAndInsertData(string query, List<SqlParameter> parameters, IDbTransaction transaction = null)
         {
             int numberOfRowsAffected = 0;
+
             using (SqlCommand cmd = new SqlCommand(query, _dbConnection.Connection))
             {
                 if (_dbConnection.Connection.State == ConnectionState.Closed)
+                {
                     await _dbConnection.OpenConnection();
+                }
+                    
+
                 cmd.CommandType = CommandType.Text;
                 cmd.Transaction = (SqlTransaction)transaction;
                 if (parameters != null)
@@ -57,13 +63,14 @@ namespace DataAccess
                 
                 numberOfRowsAffected = cmd.ExecuteNonQuery();
             }
-            await _dbConnection.CloseConnection();
+
             return numberOfRowsAffected;
         }
 
         public async Task<DataTable> GetDataWithConditions(string query, List<SqlParameter> parameters)
         {
             DataTable dt = new DataTable();
+
             using (SqlCommand cmd = new SqlCommand(query, _dbConnection.Connection))
             {
                 cmd.CommandType = CommandType.Text;
@@ -79,7 +86,7 @@ namespace DataAccess
                     sda.Fill(dt);
                 }
             }
-            await _dbConnection.CloseConnection();
+
             return dt;
         }
     }

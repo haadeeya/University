@@ -43,8 +43,9 @@ namespace DataAccess
             if (Connection != null && Connection.State == System.Data.ConnectionState.Open)
             {
                 Connection.Close();
-                Connection.Dispose();
+                //Connection.Dispose();
             }
+
             return Task.CompletedTask;
         }
     }

@@ -1,4 +1,5 @@
 ﻿using Core.StudentManager;
+using Interface;
 using Interface.Repository;
 using Model;
 using System;
@@ -7,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace Core.SubjectManager
 {
-    public class SubjectBL : IRepositoryBL<Subject>
+    public class SubjectBL : ISubjectBL
     {
-        private readonly IRepositoryDal<Subject> _subjectDal;
+        private readonly ISubjectDAL _subjectDal;
         public SubjectBL()
         {
             _subjectDal = new SubjectDal();
@@ -24,10 +25,10 @@ namespace Core.SubjectManager
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<Subject>> Get()
+        public async Task<IEnumerable<Subject>> Get()
         {
-            var allsubjects =  _subjectDal.Get();
-            return allsubjects;
+            var allsubjects =  await _subjectDal.Get();
+            return (IEnumerable<Subject>)allsubjects;
         }
 
         public Task<Subject> GetById(int id)

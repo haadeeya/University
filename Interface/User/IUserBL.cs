@@ -10,11 +10,8 @@ namespace Interface
         Task<IEnumerable<User>> Get();
         Task<User> GetById(int id);
         Task<User> Authenticate(Login login);
-
         Task<User> Create(User user);
-
         Task<User> Update(User user);
-
         Task<bool> Delete(int userId);
     }
 }
