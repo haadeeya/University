@@ -36,7 +36,7 @@ namespace Core.Registration
 
                 return new User()
                 {
-                    Id = Convert.ToInt32(row["UserID"]),
+                    Id = Convert.ToInt32(row["UserId"]),
                     Username = row["Username"].ToString(),
                     Password = row["Password"].ToString(),
                     Email = row["Email"].ToString(),
@@ -65,7 +65,7 @@ namespace Core.Registration
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<User>> Get()
+        public Task<IEnumerable<User>> GetAll()
         {
             throw new NotImplementedException();
         }

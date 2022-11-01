@@ -8,7 +8,7 @@ namespace Interface
     public interface IStudentDAL:IRepositoryDal<Student>
     {
         Task<Student> GetById(int id);
-        Task<IEnumerable<Student>> Get();
+        Task<IEnumerable<Student>> GetAll();
         Task<Student> Create(Student entity);
         Task<Student> Update(Student entity);
         Task<bool> Delete(int id);

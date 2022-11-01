@@ -29,7 +29,7 @@ namespace Core.SubjectManager
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<Subject>> Get()
+        public async Task<IEnumerable<Subject>> GetAll()
         {
             try
             {

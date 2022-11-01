@@ -25,10 +25,10 @@ namespace Core.SubjectManager
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<Subject>> Get()
+        public async Task<IEnumerable<Subject>> GetAll()
         {
-            var allsubjects =  await _subjectDal.Get();
-            return (IEnumerable<Subject>)allsubjects;
+            var allsubjects =  await _subjectDal.GetAll();
+            return allsubjects;
         }
 
         public Task<Subject> GetById(int id)

@@ -34,7 +34,28 @@ namespace Core.Registration
 
                 var result =  await _dbCommand.UpdateAndInsertData(query, parameters);
 
-                return result > 0 ? newuser : null;
+                if (result > 0)
+                {
+                    string getIdquery = "@SELECT [UserId] FROM [User] WHERE [Password] = @Password"; //to be changed
+                    List<SqlParameter> getIdparameters = new List<SqlParameter>();
+                    getIdparameters.Add(new SqlParameter("@Password", newuser.Password));
+                    var getNewUserDt = await _dbCommand.GetDataWithConditions(getIdquery, getIdparameters);
+
+                    if (getNewUserDt.Rows.Count > 0)
+                    {
+                        var row = getNewUserDt.Rows[0];
+
+                        return new User()
+                        {
+                            Id = Convert.ToInt32(row["UserId"]),
+                            Username = row["Username"].ToString(),
+                            Password = row["Password"].ToString(),
+                            Email = row["Email"].ToString(),
+                            Role = (Role)Convert.ToInt32(row["Role"])
+                        };
+                    }
+                }
+                return new User();
             }
             catch (Exception exception)
             {
@@ -48,7 +69,7 @@ namespace Core.Registration
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<User>> Get()
+        public Task<IEnumerable<User>> GetAll()
         {
             throw new NotImplementedException();
         }

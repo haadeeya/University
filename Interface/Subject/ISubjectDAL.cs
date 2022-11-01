@@ -11,7 +11,7 @@ namespace Interface
     public interface ISubjectDAL : IRepositoryDal<Subject>
     {
         Task<Subject> GetById(int id);
-        Task<IEnumerable<Subject>> Get();
+        Task<IEnumerable<Subject>> GetAll();
         Task<Subject> Create(Subject entity);
         Task<Subject> Update(Subject entity);
         Task<bool> Delete(int id);

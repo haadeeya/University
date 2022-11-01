@@ -25,14 +25,9 @@ namespace Core.StudentManager
             return _studentDal.Delete(studentId);
         }
 
-        public Task<IEnumerable<Student>> Get()
+        public async Task<IEnumerable<Student>> GetAll()
         {
-            throw new System.NotImplementedException();
-        }
-
-        public Task<IEnumerable<Student>> GetAll()
-        {
-            return _studentDal.Get();
+            return await _studentDal.GetAll();
         }
 
         public Task<Student> GetById(int id)

@@ -1,0 +1,4 @@
+﻿function loadStudents() {
+    event.preventDefault();
+
+}

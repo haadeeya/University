@@ -1,13 +1,47 @@
-﻿body {
+﻿* {
+    box-sizing: border-box;
 }
-table {
+html {
+    height: 100%;
+}
+
+body {
+    min-height: 100%;
+}
+
+.container {
+    display: block;
+    justify-content: center;
+    margin-top:5rem;
+}
+
+#students {
+    font-family: 'Noto Sans';
     border-collapse: collapse;
+    max-width: 100rem;
+    margin-left: auto;
+    margin-right: auto;
 }
-th, td {
-    border: 1px solid black;
+
+#students td, #students th {
+    border: 1px solid #ddd;
     padding: 8px;
 }
 
-thead th {
-    width: 25%;
+#students tr:nth-child(even) {
+    background-color: #f2f2f2;
 }
+
+#students tr:hover {
+    background-color: #ddd;
+}
+
+#students th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: rgb(24, 78, 165);
+    color: white;
+}
+
+

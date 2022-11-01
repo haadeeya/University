@@ -74,7 +74,7 @@ namespace University.Controllers
         [HttpGet]
         public async Task<JsonResult> GetSubjects()
         {
-            var subjectslist =  await _subjectBL.Get();
+            var subjectslist =  await _subjectBL.GetAll();
             return Json(subjectslist, JsonRequestBehavior.AllowGet);
         }
 

@@ -69,10 +69,10 @@ namespace Core.StudentManager
             }
             finally
             {
+                _dbCommand.Connection.Close();
                 transaction.Dispose();
             }
 
-            _dbCommand.Connection.Close();
             return entity;
         }
 
@@ -81,9 +81,57 @@ namespace Core.StudentManager
             throw new System.NotImplementedException();
         }
 
-        public Task<IEnumerable<Student>> Get()
+        public async Task<IEnumerable<Student>> GetAll()
         {
-            throw new NotImplementedException();
+            try
+            {
+                string query = @"SELECT s.[StudentId], [UserId], [Name], [Surname], 
+                                 [NID], [GuardianName], [EmailAddress], [DateOfBirth], [PhoneNumber], [SubjectName],
+                                 sb.[SubjectId], [StudentSubjectId], [Grade]
+                                 FROM [Student] s
+                                 INNER JOIN [StudentSubject] ss on ss.StudentId = s.StudentId
+                                 INNER JOIN [Subject] sb on sb.SubjectId = ss.SubjectId";
+
+                List<Student> allstudents = new List<Student>();
+                Student student = new Student();
+
+                var dt = await _dbCommand.GetData(query);
+
+                if (dt.Rows.Count > 0)
+                {
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        allstudents.Add(new Student()
+                        {
+                            Id = Convert.ToInt32(row["StudentId"]),
+                            Surname = row["Surname"].ToString(),
+                            Name = row["Name"].ToString(),
+                            GuardianName = row["GuardianName"].ToString(),
+                            EmailAddress = row["EmailAddress"].ToString(),
+                            NID = row["NID"].ToString(),
+                            DateOfBirth = DateTime.Parse(row["DateOfBirth"].ToString()),
+                            PhoneNumber = row["PhoneNumber"].ToString(),
+                            Subjects = new List<StudentSubject> { new StudentSubject() {
+                                StudentId = Convert.ToInt32(row["StudentId"]),
+                                SubjectId = Convert.ToInt32(row["SubjectId"]),
+                                StudentSubjectId = Convert.ToInt32(row["StudentSubjectId"]),
+                                Subject = new Subject() {
+                                    SubjectId = Convert.ToInt32(row["SubjectId"]),
+                                    SubjectName = row["SubjectName"].ToString()
+                                    },
+                                Grade = row["Grade"].ToString()
+                            } }
+                        });
+                        
+                    }
+                }
+                return allstudents;
+            }
+            catch (Exception exception)
+            {
+                MyLogger.GetInstance().Error($"Error {exception.Message}");
+                throw;
+            }
         }
 
         public async Task<Student> GetById(int id)
