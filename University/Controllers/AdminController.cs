@@ -18,18 +18,25 @@ namespace University.Controllers
         {
             _studentBL = new StudentBL();
         }
-        public async Task<ActionResult> AdminHome()
+        public ActionResult AdminHome()
         {
-            var allstudents = await _studentBL.GetAll();
-
-            return View(allstudents);
+            return View();
         }
 
         [HttpGet]
         public async Task<JsonResult> GetStudents()
         {
             var allstudents = await _studentBL.GetAll();
-            return Json(allstudents, JsonRequestBehavior.AllowGet);
+            if (allstudents == null)
+            {
+                return null;
+            }
+            var markedstudents = await _studentBL.ComputeMark(allstudents.ToList());
+            if (markedstudents == null)
+            {
+                return null;
+            }
+            return Json(markedstudents, JsonRequestBehavior.AllowGet);
         }
     }
 }

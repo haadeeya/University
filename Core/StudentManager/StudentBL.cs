@@ -3,6 +3,7 @@ using Interface;
 using Model;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System;
 
 namespace Core.StudentManager
 {
@@ -13,6 +14,23 @@ namespace Core.StudentManager
         public StudentBL()
         {
             _studentDal = new StudentDal();
+        }
+
+        public Task<List<Student>> ComputeMark(List<Student> students)
+        {
+            foreach (var student in students)
+            {
+                var mark = 0;
+                foreach (var studentsubject in student.Subjects)
+                {
+                    if(Enum.IsDefined(typeof(Results), studentsubject.Grade))
+                    {
+                        mark += (int)Enum.Parse(typeof(Results), studentsubject.Grade);
+                    }
+                }
+                student.Marks = mark;
+            }
+            return Task.FromResult(students);
         }
 
         public Task<Student> Create(Student student)

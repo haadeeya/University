@@ -84,51 +84,55 @@ namespace Core.StudentManager
 
         public async Task<IEnumerable<Student>> GetAll()
         {
-            try
-            {
-                string query = @"SELECT s.[StudentId], [UserId], [Name], [Surname], 
-                                 [NID], [GuardianName], [EmailAddress], [DateOfBirth], [PhoneNumber], [SubjectName],
-                                 sb.[SubjectId], [StudentSubjectId], [Grade]
-                                 FROM [Student] s
-                                 INNER JOIN [StudentSubject] ss on ss.StudentId = s.StudentId
-                                 INNER JOIN [Subject] sb on sb.SubjectId = ss.SubjectId";
+        try
+        {
+            string query = @"SELECT s.[StudentId], [UserId], [Name], [Surname], 
+                                [NID], [GuardianName], [EmailAddress], [DateOfBirth], [PhoneNumber], [SubjectName],
+                                sb.[SubjectId], [StudentSubjectId], [Grade]
+                                FROM [Student] s
+                                INNER JOIN [StudentSubject] ss on ss.StudentId = s.StudentId
+                                INNER JOIN [Subject] sb on sb.SubjectId = ss.SubjectId";
 
-                List<Student> allstudents = new List<Student>();
-                Student student = new Student();
+            List<Student> allstudents = new List<Student>();
+            Student student = new Student();
 
-                var dt = await _dbCommand.GetData(query);
+            var dt = await _dbCommand.GetData(query);
 
-            var result = dt.AsEnumerable()
-                        .GroupBy(x => new { Id = x.Field<int>("StudentId"),
-                            UserId = x.Field<int>("UserId"), Name = x.Field<string>("Name"),
-                            Surname = x.Field<string>("Surname"), GuardianName = x.Field<string>("GuardianName"),
-                            NID = x.Field<string>("NID"), EmailAddress = x.Field<string>("EmailAddress"),
-                            DateOfBirth = x.Field<DateTime>("DateOfBirth"), PhoneNumber = x.Field<string>("PhoneNumber")
-                        })
-                            .Select(x => new Student()
-                            {
-                                Id = x.Key.Id,
-                                UserId = x.Key.UserId,
-                                Name = x.Key.Name,
-                                Surname = x.Key.Surname,
-                                GuardianName = x.Key.GuardianName,
-                                NID = x.Key.NID,
-                                EmailAddress = x.Key.EmailAddress,
-                                DateOfBirth = x.Key.DateOfBirth,
-                                PhoneNumber = x.Key.PhoneNumber,
-                                Subjects = x.Select(y => new StudentSubject() { 
-                                    StudentSubjectId = y.Field<int>("StudentSubjectId"), Grade = y.Field<string>("Grade"),
-                                    StudentId = y.Field<int>("StudentId"), SubjectId = y.Field<int>("SubjectId"),
-                                    Subject = new Subject(y.Field<int>("SubjectId"), y.Field<string>("SubjectName"))
-                                }).ToList()
-                            });
+        var result = dt.AsEnumerable()
+                    .GroupBy(x => new { Id = x.Field<int>("StudentId"),
+                        UserId = x.Field<int>("UserId"), Name = x.Field<string>("Name"),
+                        Surname = x.Field<string>("Surname"), GuardianName = x.Field<string>("GuardianName"),
+                        NID = x.Field<string>("NID"), EmailAddress = x.Field<string>("EmailAddress"),
+                        DateOfBirth = x.Field<DateTime>("DateOfBirth"), PhoneNumber = x.Field<string>("PhoneNumber")
+                    })
+                        .Select(x => new Student()
+                        {
+                            Id = x.Key.Id,
+                            UserId = x.Key.UserId,
+                            Name = x.Key.Name,
+                            Surname = x.Key.Surname,
+                            GuardianName = x.Key.GuardianName,
+                            NID = x.Key.NID,
+                            EmailAddress = x.Key.EmailAddress,
+                            DateOfBirth = x.Key.DateOfBirth,
+                            PhoneNumber = x.Key.PhoneNumber,
+                            Subjects = x.Select(y => new StudentSubject() { 
+                                StudentSubjectId = y.Field<int>("StudentSubjectId"), Grade = y.Field<string>("Grade"),
+                                StudentId = y.Field<int>("StudentId"), SubjectId = y.Field<int>("SubjectId"),
+                                Subject = new Subject(y.Field<int>("SubjectId"), y.Field<string>("SubjectName"))
+                            }).ToList()
+                        });
 
-                return result;
-            }
+            return result;
+        }
             catch (Exception exception)
             {
                 MyLogger.GetInstance().Error($"Error {exception.Message}");
                 throw;
+            }
+            finally
+            {
+                _dbCommand.Connection.Close();
             }
         }
 

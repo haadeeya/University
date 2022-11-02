@@ -31,7 +31,9 @@ namespace Model
         [Required(ErrorMessage = "Phone Number is required.")]
         [StringLength(8, ErrorMessage = "The Phone Number must contain 8 characters")]
         public string PhoneNumber { get; set; }
-
         public List<StudentSubject> Subjects { get; set; }
+        public int Marks { get; set; }
+
+        public string Status { get; set; }
     }
 }
