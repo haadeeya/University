@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Linq;
 using System.Threading.Tasks;
 using University.Utility;
 
@@ -97,35 +98,32 @@ namespace Core.StudentManager
 
                 var dt = await _dbCommand.GetData(query);
 
-                if (dt.Rows.Count > 0)
-                {
-                    foreach (DataRow row in dt.Rows)
-                    {
-                        allstudents.Add(new Student()
-                        {
-                            Id = Convert.ToInt32(row["StudentId"]),
-                            Surname = row["Surname"].ToString(),
-                            Name = row["Name"].ToString(),
-                            GuardianName = row["GuardianName"].ToString(),
-                            EmailAddress = row["EmailAddress"].ToString(),
-                            NID = row["NID"].ToString(),
-                            DateOfBirth = DateTime.Parse(row["DateOfBirth"].ToString()),
-                            PhoneNumber = row["PhoneNumber"].ToString(),
-                            Subjects = new List<StudentSubject> { new StudentSubject() {
-                                StudentId = Convert.ToInt32(row["StudentId"]),
-                                SubjectId = Convert.ToInt32(row["SubjectId"]),
-                                StudentSubjectId = Convert.ToInt32(row["StudentSubjectId"]),
-                                Subject = new Subject() {
-                                    SubjectId = Convert.ToInt32(row["SubjectId"]),
-                                    SubjectName = row["SubjectName"].ToString()
-                                    },
-                                Grade = row["Grade"].ToString()
-                            } }
-                        });
-                        
-                    }
-                }
-                return allstudents;
+            var result = dt.AsEnumerable()
+                        .GroupBy(x => new { Id = x.Field<int>("StudentId"),
+                            UserId = x.Field<int>("UserId"), Name = x.Field<string>("Name"),
+                            Surname = x.Field<string>("Surname"), GuardianName = x.Field<string>("GuardianName"),
+                            NID = x.Field<string>("NID"), EmailAddress = x.Field<string>("EmailAddress"),
+                            DateOfBirth = x.Field<DateTime>("DateOfBirth"), PhoneNumber = x.Field<string>("PhoneNumber")
+                        })
+                            .Select(x => new Student()
+                            {
+                                Id = x.Key.Id,
+                                UserId = x.Key.UserId,
+                                Name = x.Key.Name,
+                                Surname = x.Key.Surname,
+                                GuardianName = x.Key.GuardianName,
+                                NID = x.Key.NID,
+                                EmailAddress = x.Key.EmailAddress,
+                                DateOfBirth = x.Key.DateOfBirth,
+                                PhoneNumber = x.Key.PhoneNumber,
+                                Subjects = x.Select(y => new StudentSubject() { 
+                                    StudentSubjectId = y.Field<int>("StudentSubjectId"), Grade = y.Field<string>("Grade"),
+                                    StudentId = y.Field<int>("StudentId"), SubjectId = y.Field<int>("SubjectId"),
+                                    Subject = new Subject(y.Field<int>("SubjectId"), y.Field<string>("SubjectName"))
+                                }).ToList()
+                            });
+
+                return result;
             }
             catch (Exception exception)
             {

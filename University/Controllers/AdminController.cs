@@ -1,4 +1,5 @@
 ﻿using Core.StudentManager;
+using Core.SubjectManager;
 using Interface;
 using System;
 using System.Collections.Generic;
@@ -22,6 +23,13 @@ namespace University.Controllers
             var allstudents = await _studentBL.GetAll();
 
             return View(allstudents);
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> GetStudents()
+        {
+            var allstudents = await _studentBL.GetAll();
+            return Json(allstudents, JsonRequestBehavior.AllowGet);
         }
     }
 }
