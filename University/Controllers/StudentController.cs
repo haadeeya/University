@@ -23,7 +23,7 @@ namespace University.Controllers
 
         public async Task<ActionResult> Index()
         {
-            var loggedUser = Session["CurrentUser"] as User;
+            var loggedUser = (User)Session["CurrentUser"];
 
             if (loggedUser != null && loggedUser.Role == 0)
             {
@@ -55,7 +55,7 @@ namespace University.Controllers
         {
             if (ModelState.IsValid)
             {
-                var loggedUser = Session["CurrentUser"] as User;
+                var loggedUser = (User)Session["CurrentUser"];
                 student.Id = loggedUser.Id;
                 student.UserId = loggedUser.Id;
                 foreach(var subject in student.Subjects)

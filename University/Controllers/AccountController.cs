@@ -55,25 +55,40 @@ namespace University.Controllers
         }
 
         [HttpPost]
-        public JsonResult Register(User user)
+        public async Task<JsonResult> Register(User user)
         {
             if (!ModelState.IsValid)
             {
                 return Json(new { error = "Invalid data" }, JsonRequestBehavior.AllowGet);
             }
+
+            var isUserExisted = await _userBL.GetByUsername(user.Username);
+            if(isUserExisted != null)
+            {
+                return Json(new { error = "Username already exists" }, JsonRequestBehavior.AllowGet);
+            }
+
             var result =  _userBL.Create(user);
 
             if(result != null)
             {
-                this.Session["CurrentUser"] = user;
-                this.Session["Username"] = user.Username;
+                var newuser = await _userBL.GetByUsername(user.Username);
+                if(newuser != null)
+                {
+                    Session["CurrentUser"] = new User
+                    {
+                        Id = newuser.Id,
+                        Username =  newuser.Username,
+                        Password = string.Empty,
+                        Role = newuser.Role,
+                        Email = newuser.Email
 
-                return Json(new { url = Url.Action("Index", "Student") }, JsonRequestBehavior.AllowGet);
+                    };
+                    return Json(new { url = Url.Action("Index", "Student") }, JsonRequestBehavior.AllowGet);
+                }
             }
-            else
-            {
-                return Json(new { error = "Please enter your details properly." }, JsonRequestBehavior.AllowGet);
-            }
+            
+            return Json(new { error = "Please enter your details properly." }, JsonRequestBehavior.AllowGet);
 
         }
 

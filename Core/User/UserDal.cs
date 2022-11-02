@@ -34,28 +34,7 @@ namespace Core.Registration
 
                 var result =  await _dbCommand.UpdateAndInsertData(query, parameters);
 
-                if (result > 0)
-                {
-                    string getIdquery = "@SELECT [UserId] FROM [User] WHERE [Password] = @Password"; //to be changed
-                    List<SqlParameter> getIdparameters = new List<SqlParameter>();
-                    getIdparameters.Add(new SqlParameter("@Password", newuser.Password));
-                    var getNewUserDt = await _dbCommand.GetDataWithConditions(getIdquery, getIdparameters);
-
-                    if (getNewUserDt.Rows.Count > 0)
-                    {
-                        var row = getNewUserDt.Rows[0];
-
-                        return new User()
-                        {
-                            Id = Convert.ToInt32(row["UserId"]),
-                            Username = row["Username"].ToString(),
-                            Password = row["Password"].ToString(),
-                            Email = row["Email"].ToString(),
-                            Role = (Role)Convert.ToInt32(row["Role"])
-                        };
-                    }
-                }
-                return new User();
+                return result > 0 ? newuser : null;
             }
             catch (Exception exception)
             {
@@ -72,6 +51,38 @@ namespace Core.Registration
         public Task<IEnumerable<User>> GetAll()
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<User> GetByUsername(string username)
+        {
+            try
+            {
+                string query = @"SELECT [UserId] , [Username], [Password], [Email], [Role]
+                                FROM [User] WHERE Username = @Username";
+                List<SqlParameter> parameters = new List<SqlParameter>();
+
+                parameters.Add(new SqlParameter("@Username", username));
+
+                var result = await _dbCommand.GetDataWithConditions(query, parameters);
+                if(result.Rows.Count > 0)
+                {
+                    var row = result.Rows[0];
+                    return new User()
+                    {
+                        Id = Convert.ToInt32(row["UserId"]),
+                        Username = row["Username"].ToString(),
+                        Password = row["Password"].ToString(),
+                        Email = row["Email"].ToString(),
+                        Role = (Role)Convert.ToInt32(row["Role"])
+                    };
+                }
+                return null;
+            }
+            catch (Exception exception)
+            {
+                MyLogger.GetInstance().Error($"Error {exception.Message}");
+                throw;
+            }
         }
 
         public Task<User> GetById(int id)
