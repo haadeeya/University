@@ -32,10 +32,8 @@ namespace Core.SubjectManager
             return allsubjects;
         }
 
-        public Task<Subject> GetById(int id)
-        {
-            throw new NotImplementedException();
-        }
+        public async Task<Subject> GetById(int id) => await _subjectDal.GetById(id);
+        
 
         public Task<Subject> Update(Subject entity)
         {

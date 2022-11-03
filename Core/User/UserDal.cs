@@ -8,13 +8,13 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
 using University.Utility;
-using IDbCommand = Interface.IDbCommand;
+using IDbCommand = Interface.IDbCommandStudent;
 
 namespace Core.Registration
 {
     public class UserDal : IUserDal, IRepositoryDal<User>
     {
-        private readonly IDbCommand _dbCommand;
+        private readonly IDbCommandStudent _dbCommand;
         public UserDal()
         {
             _dbCommand = new DBCommand();

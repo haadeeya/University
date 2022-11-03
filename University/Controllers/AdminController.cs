@@ -1,4 +1,5 @@
 ﻿using Core.StudentManager;
+using Core.SubjectManager;
 using Interface;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,10 +10,12 @@ namespace University.Controllers
     public class AdminController : Controller
     {
         private readonly IStudentBL _studentBL;
+        private readonly ISubjectBL _subjectBL;
 
         public AdminController()
         {
             _studentBL = new StudentBL();
+            _subjectBL = new SubjectBL();
         }
         public ActionResult AdminHome()
         {
@@ -22,6 +25,7 @@ namespace University.Controllers
         [HttpGet]
         public async Task<JsonResult> GetStudents()
         {
+            var subject = await _subjectBL.GetById(1);
             var allstudents = await _studentBL.GetAll();
             if (allstudents == null)return Json(null);
             var markedstudents = await _studentBL.ComputeMarkAndStatus(allstudents.ToList());
@@ -29,7 +33,7 @@ namespace University.Controllers
             {
                 return null;
             }
-            return Json(markedstudents, JsonRequestBehavior.AllowGet);
+            return Json(subject, JsonRequestBehavior.AllowGet);
         }
     }
 }

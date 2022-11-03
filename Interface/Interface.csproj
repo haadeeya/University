@@ -43,6 +43,8 @@
   <ItemGroup>
     <Compile Include="Class1.cs" />
     <Compile Include="IDbCommand.cs" />
+    <Compile Include="IDbCommandStudent.cs" />
+    <Compile Include="IDbCommandSubject.cs" />
     <Compile Include="Repository\IRepositoryBL.cs" />
     <Compile Include="Repository\IRepositoryDal.cs" />
     <Compile Include="Student\IStudentBL.cs" />

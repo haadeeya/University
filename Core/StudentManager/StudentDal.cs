@@ -14,7 +14,7 @@ namespace Core.StudentManager
 {
     public class StudentDal : IStudentDAL
     {
-        private readonly Interface.IDbCommand _dbCommand;
+        private readonly IDbCommandStudent _dbCommand;
 
         public StudentDal()
         {
