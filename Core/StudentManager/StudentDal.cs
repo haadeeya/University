@@ -84,56 +84,56 @@ namespace Core.StudentManager
 
         public async Task<IEnumerable<Student>> GetAll()
         {
-        try
+    try
+    {
+        string query = @"SELECT s.[StudentId], [UserId], [Name], [Surname], 
+                            [NID], [GuardianName], [EmailAddress], [DateOfBirth], [PhoneNumber], [SubjectName],
+                            sb.[SubjectId], [StudentSubjectId], [Grade]
+                            FROM [Student] s
+                            INNER JOIN [StudentSubject] ss on ss.StudentId = s.StudentId
+                            INNER JOIN [Subject] sb on sb.SubjectId = ss.SubjectId";
+
+        List<Student> allstudents = new List<Student>();
+        Student student = new Student();
+
+        var dt = await _dbCommand.GetData(query);
+
+    var result = dt.AsEnumerable()
+                .GroupBy(x => new { Id = x.Field<int>("StudentId"),
+                    UserId = x.Field<int>("UserId"), Name = x.Field<string>("Name"),
+                    Surname = x.Field<string>("Surname"), GuardianName = x.Field<string>("GuardianName"),
+                    NID = x.Field<string>("NID"), EmailAddress = x.Field<string>("EmailAddress"),
+                    DateOfBirth = x.Field<DateTime>("DateOfBirth"), PhoneNumber = x.Field<string>("PhoneNumber")
+                })
+                    .Select(x => new Student()
+                    {
+                        Id = x.Key.Id,
+                        UserId = x.Key.UserId,
+                        Name = x.Key.Name,
+                        Surname = x.Key.Surname,
+                        GuardianName = x.Key.GuardianName,
+                        NID = x.Key.NID,
+                        EmailAddress = x.Key.EmailAddress,
+                        DateOfBirth = x.Key.DateOfBirth,
+                        PhoneNumber = x.Key.PhoneNumber,
+                        Subjects = x.Select(y => new StudentSubject() { 
+                            StudentSubjectId = y.Field<int>("StudentSubjectId"), Grade = y.Field<string>("Grade"),
+                            StudentId = y.Field<int>("StudentId"), SubjectId = y.Field<int>("SubjectId"),
+                            Subject = new Subject(y.Field<int>("SubjectId"), y.Field<string>("SubjectName"))
+                        }).ToList()
+                    });
+
+        return result;
+    }
+        catch (Exception exception)
         {
-            string query = @"SELECT s.[StudentId], [UserId], [Name], [Surname], 
-                                [NID], [GuardianName], [EmailAddress], [DateOfBirth], [PhoneNumber], [SubjectName],
-                                sb.[SubjectId], [StudentSubjectId], [Grade]
-                                FROM [Student] s
-                                INNER JOIN [StudentSubject] ss on ss.StudentId = s.StudentId
-                                INNER JOIN [Subject] sb on sb.SubjectId = ss.SubjectId";
-
-            List<Student> allstudents = new List<Student>();
-            Student student = new Student();
-
-            var dt = await _dbCommand.GetData(query);
-
-        var result = dt.AsEnumerable()
-                    .GroupBy(x => new { Id = x.Field<int>("StudentId"),
-                        UserId = x.Field<int>("UserId"), Name = x.Field<string>("Name"),
-                        Surname = x.Field<string>("Surname"), GuardianName = x.Field<string>("GuardianName"),
-                        NID = x.Field<string>("NID"), EmailAddress = x.Field<string>("EmailAddress"),
-                        DateOfBirth = x.Field<DateTime>("DateOfBirth"), PhoneNumber = x.Field<string>("PhoneNumber")
-                    })
-                        .Select(x => new Student()
-                        {
-                            Id = x.Key.Id,
-                            UserId = x.Key.UserId,
-                            Name = x.Key.Name,
-                            Surname = x.Key.Surname,
-                            GuardianName = x.Key.GuardianName,
-                            NID = x.Key.NID,
-                            EmailAddress = x.Key.EmailAddress,
-                            DateOfBirth = x.Key.DateOfBirth,
-                            PhoneNumber = x.Key.PhoneNumber,
-                            Subjects = x.Select(y => new StudentSubject() { 
-                                StudentSubjectId = y.Field<int>("StudentSubjectId"), Grade = y.Field<string>("Grade"),
-                                StudentId = y.Field<int>("StudentId"), SubjectId = y.Field<int>("SubjectId"),
-                                Subject = new Subject(y.Field<int>("SubjectId"), y.Field<string>("SubjectName"))
-                            }).ToList()
-                        });
-
-            return result;
+            MyLogger.GetInstance().Error($"Error {exception.Message}");
+            throw;
         }
-            catch (Exception exception)
-            {
-                MyLogger.GetInstance().Error($"Error {exception.Message}");
-                throw;
-            }
-            finally
-            {
-                _dbCommand.Connection.Close();
-            }
+        finally
+        {
+            _dbCommand.Connection.Close();
+        }
         }
 
         public async Task<Student> GetById(int id)
@@ -181,11 +181,57 @@ namespace Core.StudentManager
                 MyLogger.GetInstance().Error($"Error {exception.Message}");
                 throw;
             }
+            finally
+            {
+                _dbCommand.Connection.Close();
+            }
         }
 
         public Task<Student> Update(Student entity)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<bool> UpdateStatus(List<Student> students)
+        {
+            bool isStatusUpdated = false;
+            string updateStudentQuery = @"UPDATE [Student]
+                                          SET [Status] = @Status
+                                          WHERE [StudentId] = @StudentId;";
+
+
+            if (_dbCommand.Connection.State == ConnectionState.Closed)
+            {
+                _dbCommand.Connection.Open();
+            }
+
+            IDbTransaction transaction = _dbCommand.Connection.BeginTransaction();
+            try
+            {
+                
+                foreach (var student in students)
+                {
+                    List<SqlParameter> updateStudentParameters = new List<SqlParameter>();
+                    updateStudentParameters.Add((new SqlParameter("@StudentId", student.Id)));
+                    updateStudentParameters.Add((new SqlParameter("@Status", student.Status)));
+
+                    await _dbCommand.UpdateAndInsertData(updateStudentQuery, updateStudentParameters, transaction);
+                }
+                transaction.Commit();
+                isStatusUpdated = true;
+            }
+            catch
+            {
+                transaction.Rollback();
+                throw;
+            }
+            finally
+            {
+                _dbCommand.Connection.Close();
+                transaction.Dispose();
+            }
+
+            return isStatusUpdated;
         }
     }
 }

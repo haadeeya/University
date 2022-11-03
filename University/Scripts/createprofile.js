@@ -105,6 +105,12 @@ function createProfile(event) {
                 toastr.success("Registration successful. Redirecting User...");
                 window.location = response.url;
             }
+            else if (response.allErrors) {
+                for (var error in response.allErrors) {
+                    console.log(response.allErrors[error].ErrorMessage);
+                    toastr.error(response.allErrors[error].ErrorMessage);
+                }
+            }
         }
         else {
             toastr.error('Unable to Register student');

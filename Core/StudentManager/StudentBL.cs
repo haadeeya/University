@@ -16,7 +16,7 @@ namespace Core.StudentManager
             _studentDal = new StudentDal();
         }
 
-        public Task<List<Student>> ComputeMark(List<Student> students)
+        public async Task<List<Student>> ComputeMarkAndStatus(List<Student> students)
         {
             foreach (var student in students)
             {
@@ -30,33 +30,36 @@ namespace Core.StudentManager
                 }
                 student.Marks = mark;
             }
-            return Task.FromResult(students);
+            var studentStatuslist = await UpdateStatus(students);
+            if(studentStatuslist.Count > 0)
+            {
+                return studentStatuslist;
+            }
+            return null;
         }
 
-        public Task<Student> Create(Student student)
+        public Task<Student> Create(Student student)=>_studentDal.Create(student);
+        
+
+        public Task<bool> Delete(int studentId)=>_studentDal.Delete(studentId);
+        
+
+        public async Task<IEnumerable<Student>> GetAll()=> await _studentDal.GetAll();
+        
+
+        public Task<Student> GetById(int id) => _studentDal.GetById(id);
+        
+
+        public Task<Student> Update(Student student) => _studentDal.Create(student);
+
+        public async Task<List<Student>> UpdateStatus(List<Student> students)
         {
-            return _studentDal.Create(student);
-        }
+            for(int i=0;i<students.Count;i++)             
+                students[i].Status = students[i].Marks < 10 ? Status.Rejected.ToString() : i < 15 ? Status.Approved.ToString() : Status.Waiting.ToString();
 
-        public Task<bool> Delete(int studentId)
-        {
-            return _studentDal.Delete(studentId);
+           var studentStatuslist =  await _studentDal.UpdateStatus(students);
+            if(studentStatuslist) return students;
+            return null;
         }
-
-        public async Task<IEnumerable<Student>> GetAll()
-        {
-            return await _studentDal.GetAll();
-        }
-
-        public Task<Student> GetById(int id)
-        {
-            return _studentDal.GetById(id);
-        }
-
-        public Task<Student> Update(Student student)
-        {
-            return _studentDal.Create(student);
-        }
-
     }
 }

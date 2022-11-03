@@ -4,6 +4,8 @@ using Core.SubjectManager;
 using Interface;
 using Interface.Repository;
 using Model;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 
@@ -46,29 +48,25 @@ namespace University.Controllers
 
         public ActionResult CreateProfile()
         {
-            
             return View();
         }
 
         [HttpPost]
         public async Task<JsonResult> CreateProfile(Student student)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid) return Json(new {result=false, allErrors = ModelState.Values.SelectMany(v => v.Errors) }, JsonRequestBehavior.AllowGet);
+            
+            var loggedUser = (User)Session["CurrentUser"];
+            student.Id = loggedUser.Id;
+            student.UserId = loggedUser.Id;
+            foreach(var subject in student.Subjects)
             {
-                var loggedUser = (User)Session["CurrentUser"];
-                student.Id = loggedUser.Id;
-                student.UserId = loggedUser.Id;
-                foreach(var subject in student.Subjects)
-                {
-                    subject.StudentId = student.Id;
-                }
-                var newstudent = await _studentBL.Create(student);
-                if (newstudent != null)
-                {
-                    return Json(new { result = true, url = Url.Action("Index", "Student") });
-                }
+                subject.StudentId = student.Id;
             }
-            return null;
+            var newstudent = await _studentBL.Create(student);
+            if (newstudent == null)return null;
+            return Json(new { result = true, url = Url.Action("Index", "Student") });
+
         }
 
         [HttpGet]

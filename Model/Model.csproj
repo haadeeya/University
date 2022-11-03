@@ -46,6 +46,7 @@
     <Compile Include="Login.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Results.cs" />
+    <Compile Include="Status.cs" />
     <Compile Include="Student.cs" />
     <Compile Include="StudentSubject.cs" />
     <Compile Include="Subject.cs" />

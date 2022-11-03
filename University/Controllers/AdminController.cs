@@ -1,11 +1,7 @@
 ﻿using Core.StudentManager;
-using Core.SubjectManager;
 using Interface;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
 
 namespace University.Controllers
@@ -27,11 +23,8 @@ namespace University.Controllers
         public async Task<JsonResult> GetStudents()
         {
             var allstudents = await _studentBL.GetAll();
-            if (allstudents == null)
-            {
-                return null;
-            }
-            var markedstudents = await _studentBL.ComputeMark(allstudents.ToList());
+            if (allstudents == null)return Json(null);
+            var markedstudents = await _studentBL.ComputeMarkAndStatus(allstudents.ToList());
             if (markedstudents == null)
             {
                 return null;

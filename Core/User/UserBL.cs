@@ -75,10 +75,8 @@ namespace Core.Registration
             throw new NotImplementedException();
         }
 
-        public async Task<User> GetByUsername(string username)
-        {
-            return await _userDal.GetByUsername(username);
-        }
+        public async Task<User> GetByUsername(string username)=> await _userDal.GetByUsername(username);
+        
 
         public Task<User> Update(User entity)
         {

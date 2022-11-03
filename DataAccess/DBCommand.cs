@@ -1,14 +1,8 @@
-﻿using System.Data.SqlClient;
+﻿using System.Collections.Generic;
 using System.Data;
-using System.Collections.Generic;
-using Interface;
+using System.Data.SqlClient;
 using System.Threading.Tasks;
 using IDbCommand = Interface.IDbCommand;
-using Model;
-using System;
-using System.Security.Cryptography;
-using University.Utility;
-using System.Collections;
 
 namespace DataAccess
 {
@@ -92,50 +86,4 @@ namespace DataAccess
     }
 }
 
-//string insertStudentQuery = @"INSERT INTO [Student]
-//                                 VALUES(@StudentId, @UserId, @Name, @Surname, @NID, @GuardianName, @EmailAddress, @DateOfBirth, @PhoneNumber);";
-//string insertSubjectQuery = @"INSERT INTO [StudentSubject] VALUES(@StudentId, @SubjectId, @Grade);";
 
-
-//SqlCommand command = new SqlCommand();
-//command.CommandText = insertStudentQuery;
-//command.Connection = _dbConnection.Connection;
-
-//var transaction = _dbConnection.Connection.BeginTransaction();
-//command.Transaction = transaction;
-
-//command.Parameters.Add(new SqlParameter("@StudentId", student.Id));
-//command.Parameters.Add(new SqlParameter("@UserId", student.UserId));
-//command.Parameters.Add(new SqlParameter("@NID", student.NID));
-//command.Parameters.Add(new SqlParameter("@Name", student.Name));
-//command.Parameters.Add(new SqlParameter("@Surname", student.Surname));
-//command.Parameters.Add(new SqlParameter("@GuardianName", student.GuardianName));
-//command.Parameters.Add(new SqlParameter("@EmailAddress", student.EmailAddress));
-//command.Parameters.Add(new SqlParameter("@DateOfBirth", student.DateOfBirth));
-//command.Parameters.Add(new SqlParameter("@PhoneNumber", student.PhoneNumber));
-//command.ExecuteNonQuery();
-
-//foreach (var subject in student.Subjects)
-//{
-//    using (SqlCommand command2 = new SqlCommand())
-//    {
-//        command2.Connection = _dbConnection.Connection;
-//        command2.CommandText = insertSubjectQuery;
-//        command2.Transaction = transaction;
-//        command2.Parameters.Add((new SqlParameter("@StudentId", subject.StudentId)));
-//        command2.Parameters.Add((new SqlParameter("@SubjectId", subject.SubjectId)));
-//        command2.Parameters.Add((new SqlParameter("@Grade", subject.Grade)));
-//        command2.ExecuteNonQuery();
-//    }
-//}
-//try
-//{
-//    transaction.Commit();
-//    return true;
-//}
-//catch (Exception exception)
-//{
-//    transaction.Rollback();
-//    MyLogger.GetInstance().Error($"Error {exception.Message}");
-//    throw;
-//}

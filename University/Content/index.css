@@ -67,7 +67,6 @@ h2 {
 a {
     text-decoration: none;
     color: #fff;
-    background-color: #009ee3;
     margin-left: 16px;
     border-style: solid;
     border-width: 0px;
@@ -77,7 +76,6 @@ a {
 }
 
 .edit_btn{
-    background-color:teal;
     border:none;
 }
 

@@ -10,7 +10,7 @@ namespace Model
         public int UserId { get; set; }
 
         [Required(ErrorMessage = "NID is required.")]
-        [StringLength(14, ErrorMessage = "The NID must contain 14 characters")]
+        [RegularExpression(@"(.{14})", ErrorMessage = "The NID must contain 14 characters")]
         public string NID { get; set; }
 
         [Required(ErrorMessage = "Name is required.")]
@@ -33,7 +33,6 @@ namespace Model
         public string PhoneNumber { get; set; }
         public List<StudentSubject> Subjects { get; set; }
         public int Marks { get; set; }
-
         public string Status { get; set; }
     }
 }

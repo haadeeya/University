@@ -12,5 +12,6 @@ namespace Interface
         Task<Student> Create(Student entity);
         Task<Student> Update(Student entity);
         Task<bool> Delete(int id);
+        Task<bool> UpdateStatus(List<Student> students);
     }
 }
