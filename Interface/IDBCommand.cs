@@ -12,5 +12,7 @@ namespace Interface
         Task<DataTable> GetData(string query);
         Task<int> UpdateAndInsertData(string query, List<SqlParameter> parameters, IDbTransaction transaction = null);
         Task<DataTable> GetDataWithConditions(string query, List<SqlParameter> parameters);
+
+        Task<List<Subject>> GetSubjects(string query);
     }
 }

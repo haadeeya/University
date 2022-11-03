@@ -36,24 +36,10 @@ namespace Core.SubjectManager
                 string query = @"SELECT [SubjectId], [SubjectName] FROM [Subject]";
                 List<SqlParameter> parameters = new List<SqlParameter>();
 
-                Subject thissubject;
-                List<Subject> allsubjects = new List<Subject>();
-
-                var dt =  await _dbCommand.GetData(query);
-
-                if (dt.Rows.Count > 0)
-                {
-                    foreach (DataRow row in dt.Rows)
-                    {
-                        thissubject = new Subject(Convert.ToInt32(row["SubjectId"]), row["SubjectName"].ToString());
-                        allsubjects.Add(thissubject);
-                    }
-                    return allsubjects;
-                }
-                else
-                {
-                    return null;
-                }
+                var subjects =  await _dbCommand.GetSubjects(query);
+                if(subjects == null)return null;
+                return subjects;
+                
             }
             catch (Exception exception)
             {

@@ -50,6 +50,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ILogger.cs" />
     <Compile Include="MyLogger.cs" />
+    <Compile Include="ToList.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
