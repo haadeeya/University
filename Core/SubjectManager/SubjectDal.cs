@@ -19,17 +19,17 @@ namespace Core.SubjectManager
         {
             _dbCommand = new DBCommand();
         }
-        public Task<Subject> Create(Subject entity)
+        public Task<Subject> CreateAsync(Subject entity)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> Delete(int id)
+        public Task<bool> DeleteAsync(int id)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<Subject>> GetAll()
+        public async Task<IEnumerable<Subject>> GetAllAsync()
         {
             try
             {
@@ -62,12 +62,12 @@ namespace Core.SubjectManager
             }
         }
 
-        public Task<Subject> GetById(int id)
+        public Task<Subject> GetByIdAsync(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Subject> Update(Subject entity)
+        public Task<Subject> UpdateAsync(Subject entity)
         {
             throw new NotImplementedException();
         }

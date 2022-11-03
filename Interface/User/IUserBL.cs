@@ -7,12 +7,12 @@ namespace Interface
 {
     public interface IUserBL : IRepositoryBL<User>
     {
-        Task<IEnumerable<User>> GetAll();
-        Task<User> GetById(int id);
+        Task<IEnumerable<User>> GetAllAsync();
+        Task<User> GetByIdAsync(int id);
         Task<User> GetByUsername(string username);
         Task<User> Authenticate(Login login);
-        Task<User> Create(User user);
-        Task<User> Update(User user);
-        Task<bool> Delete(int userId);
+        Task<User> CreateAsync(User user);
+        Task<User> UpdateAsync(User user);
+        Task<bool> DeleteAsync(int userId);
     }
 }

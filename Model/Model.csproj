@@ -53,5 +53,11 @@
     <Compile Include="User.cs" />
     <Compile Include="Role.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Utility\Utility.csproj">
+      <Project>{80634754-6E9D-4459-AEA1-D397FE7D24C2}</Project>
+      <Name>Utility</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

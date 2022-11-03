@@ -20,7 +20,7 @@ namespace Core.Registration
             _dbCommand = new DBCommand();
         }
 
-        public async Task<User> Create(User newuser)
+        public async Task<User> CreateAsync(User newuser)
         {
             try
             {
@@ -43,12 +43,12 @@ namespace Core.Registration
             }
         }
 
-        public Task<bool> Delete(int userId)
+        public Task<bool> DeleteAsync(int userId)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<User>> GetAll()
+        public Task<IEnumerable<User>> GetAllAsync()
         {
             throw new NotImplementedException();
         }
@@ -85,12 +85,12 @@ namespace Core.Registration
             }
         }
 
-        public Task<User> GetById(int id)
+        public Task<User> GetByIdAsync(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<User> Update(User user)
+        public Task<User> UpdateAsync(User user)
         {
             throw new NotImplementedException();
         }

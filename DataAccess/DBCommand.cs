@@ -43,7 +43,7 @@ namespace DataAccess
                 {
                     await _dbConnection.OpenConnection();
                 }
-                    
+
 
                 cmd.CommandType = CommandType.Text;
                 cmd.Transaction = (SqlTransaction)transaction;
@@ -54,7 +54,7 @@ namespace DataAccess
                         cmd.Parameters.AddWithValue(parameter.ParameterName, parameter.Value);
                     });
                 }
-                
+
                 numberOfRowsAffected = cmd.ExecuteNonQuery();
             }
 
@@ -81,7 +81,7 @@ namespace DataAccess
                 }
             }
 
-            return dt;
+            return await Task.FromResult(dt);
         }
     }
 }

@@ -10,10 +10,10 @@ namespace Interface
 {
     public interface ISubjectDAL : IRepositoryDal<Subject>
     {
-        Task<Subject> GetById(int id);
-        Task<IEnumerable<Subject>> GetAll();
-        Task<Subject> Create(Subject entity);
-        Task<Subject> Update(Subject entity);
-        Task<bool> Delete(int id);
+        Task<Subject> GetByIdAsync(int id);
+        Task<IEnumerable<Subject>> GetAllAsync();
+        Task<Subject> CreateAsync(Subject entity);
+        Task<Subject> UpdateAsync(Subject entity);
+        Task<bool> DeleteAsync(int id);
     }
 }

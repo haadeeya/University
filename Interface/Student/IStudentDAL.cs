@@ -7,11 +7,11 @@ namespace Interface
 {
     public interface IStudentDAL:IRepositoryDal<Student>
     {
-        Task<Student> GetById(int id);
-        Task<IEnumerable<Student>> GetAll();
-        Task<Student> Create(Student entity);
-        Task<Student> Update(Student entity);
-        Task<bool> Delete(int id);
-        Task<bool> UpdateStatus(List<Student> students);
+        Task<Student> GetByIdAsync(int id);
+        Task<IEnumerable<Student>> GetAllAsync();
+        Task<Student> CreateAsync(Student entity);
+        Task<Student> UpdateAsync(Student entity);
+        Task<bool> DeleteAsync(int id);
+        Task<bool> UpdateStatusAsync(List<Student> students);
     }
 }

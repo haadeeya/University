@@ -68,7 +68,7 @@ namespace University.Controllers
                 return Json(new { error = "Username already exists" }, JsonRequestBehavior.AllowGet);
             }
 
-            var result =  _userBL.Create(user);
+            var result =  _userBL.CreateAsync(user);
 
             if(result != null)
             {

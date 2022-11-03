@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Utility;
 
 namespace Model
 {
@@ -25,7 +26,9 @@ namespace Model
         [RegularExpression(".+@.+\\..+", ErrorMessage = "Please Enter Correct Email Address")]
         public string EmailAddress { get; set; }
 
-        [Required(ErrorMessage = "Date Of Birth is required.")]
+        [MinimumAge(17, ErrorMessage ="Minimum Age is 17")]
+        [MaximumAge(80, ErrorMessage = "Maximum Age is 80")]
+        [Required(ErrorMessage = "Date of Birth is required.")]
         public DateTime DateOfBirth { get; set; }
 
         [Required(ErrorMessage = "Phone Number is required.")]

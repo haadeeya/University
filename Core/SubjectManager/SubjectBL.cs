@@ -15,29 +15,29 @@ namespace Core.SubjectManager
         {
             _subjectDal = new SubjectDal();
         }
-        public Task<Subject> Create(Subject entity)
+        public Task<Subject> CreateAsync(Subject entity)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> Delete(int id)
+        public Task<bool> DeleteAsync(int id)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<Subject>> GetAll()
+        public async Task<IEnumerable<Subject>> GetAllAsync()
         {
-            var allsubjects = await _subjectDal.GetAll();
+            var allsubjects = await _subjectDal.GetAllAsync();
                 if (allsubjects == null)return null;
             return allsubjects;
         }
 
-        public Task<Subject> GetById(int id)
+        public Task<Subject> GetByIdAsync(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Subject> Update(Subject entity)
+        public Task<Subject> UpdateAsync(Subject entity)
         {
             throw new NotImplementedException();
         }

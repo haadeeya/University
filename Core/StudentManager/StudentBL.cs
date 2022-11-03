@@ -16,7 +16,7 @@ namespace Core.StudentManager
             _studentDal = new StudentDal();
         }
 
-        public async Task<List<Student>> ComputeMarkAndStatus(List<Student> students)
+        public async Task<List<Student>> ComputeMarkAndStatusAsync(List<Student> students)
         {
             foreach (var student in students)
             {
@@ -30,7 +30,7 @@ namespace Core.StudentManager
                 }
                 student.Marks = mark;
             }
-            var studentStatuslist = await UpdateStatus(students);
+            var studentStatuslist = await UpdateStatusAsync(students);
             if(studentStatuslist.Count > 0)
             {
                 return studentStatuslist;
@@ -38,26 +38,26 @@ namespace Core.StudentManager
             return null;
         }
 
-        public Task<Student> Create(Student student)=>_studentDal.Create(student);
+        public Task<Student> CreateAsync(Student student)=>_studentDal.CreateAsync(student);
         
 
-        public Task<bool> Delete(int studentId)=>_studentDal.Delete(studentId);
+        public Task<bool> DeleteAsync(int studentId)=>_studentDal.DeleteAsync(studentId);
         
 
-        public async Task<IEnumerable<Student>> GetAll()=> await _studentDal.GetAll();
+        public async Task<IEnumerable<Student>> GetAllAsync()=> await _studentDal.GetAllAsync();
         
 
-        public Task<Student> GetById(int id) => _studentDal.GetById(id);
+        public Task<Student> GetByIdAsync(int id) => _studentDal.GetByIdAsync(id);
         
 
-        public Task<Student> Update(Student student) => _studentDal.Create(student);
+        public Task<Student> UpdateAsync(Student student) => _studentDal.CreateAsync(student);
 
-        public async Task<List<Student>> UpdateStatus(List<Student> students)
+        public async Task<List<Student>> UpdateStatusAsync(List<Student> students)
         {
             for(int i=0;i<students.Count;i++)             
                 students[i].Status = students[i].Marks < 10 ? Status.Rejected.ToString() : i < 15 ? Status.Approved.ToString() : Status.Waiting.ToString();
 
-           var studentStatuslist =  await _studentDal.UpdateStatus(students);
+           var studentStatuslist =  await _studentDal.UpdateStatusAsync(students);
             if(studentStatuslist) return students;
             return null;
         }

@@ -21,7 +21,7 @@ namespace Core.StudentManager
             _dbCommand = new DBCommand();
         }
 
-        public async Task<Student> Create(Student entity)
+        public async Task<Student> CreateAsync(Student entity)
         {
             string insertStudentQuery = @"INSERT INTO [Student](StudentId, UserId, Name, Surname, NID, GuardianName, EmailAddress, DateOfBirth, PhoneNumber)
                                  VALUES(@StudentId, @UserId, @Name, @Surname, @NID, @GuardianName, @EmailAddress, @DateOfBirth, @PhoneNumber);";
@@ -77,12 +77,12 @@ namespace Core.StudentManager
             return entity;
         }
 
-        public Task<bool> Delete(int studentId)
+        public Task<bool> DeleteAsync(int studentId)
         {
             throw new System.NotImplementedException();
         }
 
-        public async Task<IEnumerable<Student>> GetAll()
+        public async Task<IEnumerable<Student>> GetAllAsync()
         {
     try
     {
@@ -136,7 +136,7 @@ namespace Core.StudentManager
         }
         }
 
-        public async Task<Student> GetById(int id)
+        public async Task<Student> GetByIdAsync(int id)
         {
             try
             {
@@ -187,12 +187,12 @@ namespace Core.StudentManager
             }
         }
 
-        public Task<Student> Update(Student entity)
+        public Task<Student> UpdateAsync(Student entity)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<bool> UpdateStatus(List<Student> students)
+        public async Task<bool> UpdateStatusAsync(List<Student> students)
         {
             bool isStatusUpdated = false;
             string updateStudentQuery = @"UPDATE [Student]

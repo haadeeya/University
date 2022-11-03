@@ -22,9 +22,9 @@ namespace University.Controllers
         [HttpGet]
         public async Task<JsonResult> GetStudents()
         {
-            var allstudents = await _studentBL.GetAll();
+            var allstudents = await _studentBL.GetAllAsync();
             if (allstudents == null)return Json(null);
-            var markedstudents = await _studentBL.ComputeMarkAndStatus(allstudents.ToList());
+            var markedstudents = await _studentBL.ComputeMarkAndStatusAsync(allstudents.ToList());
             if (markedstudents == null)
             {
                 return null;
