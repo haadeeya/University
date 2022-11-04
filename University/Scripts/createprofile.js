@@ -28,7 +28,7 @@ function addSubject() {
     console.log(count);
     var newselect = `<select id="subjectname${count}" name="user_subject">`
     for (var i = 0; i < jsonobj.length; i++) {
-        newselect += `<option value="${jsonobj[i].SubjectId}">${jsonobj[i].SubjectName}</option >`
+        newselect += `<option value="${jsonobj[i].SubjectId}">${jsonobj[i].SubjectName}</option>`
     }
     newselect +=`</select>`
     let subjectresult = `<div class="dropdowncontainer" id="dropdown` + count +`">

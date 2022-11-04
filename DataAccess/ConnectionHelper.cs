@@ -48,7 +48,6 @@ namespace DataAccess
                     sda.Fill(dataTable);
                 }
             }
-
             return dataTable;
         }
 
@@ -71,7 +70,6 @@ namespace DataAccess
                         command.Parameters.AddWithValue(parameter.ParameterName, parameter.Value);
                     }
                 }
-
                 return command.ExecuteNonQuery();
             }
         }
@@ -82,7 +80,6 @@ namespace DataAccess
             {
                 Connection.Close();
             }
-
             return Connection.OpenAsync();
         }
     }

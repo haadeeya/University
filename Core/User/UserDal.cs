@@ -102,7 +102,7 @@ namespace Core.Registration
             throw new NotImplementedException();
         }
 
-        public async Task<DataTable> Get(Login login)
+        public async Task<User> GetCredentialsAsync(Login login)
         {
             ConnectionHelper helper = new ConnectionHelper(_conn);
 
@@ -114,7 +114,22 @@ namespace Core.Registration
                 parameters.Add(new SqlParameter("@Username", login.Username));
                 parameters.Add(new SqlParameter("@Password", login.Password));
 
-                return await helper.GetData(query, parameters);
+                DataTable dataTable =  await helper.GetData(query, parameters);
+
+                if (dataTable.Rows.Count > 0)
+                {
+                    var row = dataTable.Rows[0];
+
+                    return new User()
+                    {
+                        Id = Convert.ToInt32(row["UserId"]),
+                        Username = row["Username"].ToString(),
+                        Password = row["Password"].ToString(),
+                        Email = row["Email"].ToString(),
+                        Role = (Role)Convert.ToInt32(row["Role"])
+                    };
+                }
+                return null;
             }
             catch (Exception exception)
             {

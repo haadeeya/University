@@ -28,23 +28,8 @@ namespace Core.Registration
                 login.Password = Convert.ToBase64String(passwordHash);
             }
 
-            var userDt = await _userDal.Get(login);
-
-            if (userDt.Rows.Count > 0)
-            {
-                var row = userDt.Rows[0];
-
-                return new User()
-                {
-                    Id = Convert.ToInt32(row["UserId"]),
-                    Username = row["Username"].ToString(),
-                    Password = row["Password"].ToString(),
-                    Email = row["Email"].ToString(),
-                    Role = (Role)Convert.ToInt32(row["Role"])
-                };
-            }
-
-            return null;
+            var authenticateUser = await _userDal.GetCredentialsAsync(login);
+            return authenticateUser;
         }
 
         public async Task<User> CreateAsync(User user)

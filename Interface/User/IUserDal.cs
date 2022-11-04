@@ -16,6 +16,6 @@ namespace Interface
         Task<User> UpdateAsync(User user);
 
         Task<bool> DeleteAsync(int userId);
-        Task<DataTable> Get(Login login);
+        Task<User> GetCredentialsAsync(Login login);
     }
 }
