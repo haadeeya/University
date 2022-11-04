@@ -31,11 +31,10 @@ namespace Core.StudentManager
                 student.Marks = mark;
             }
             var studentStatuslist = await UpdateStatusAsync(students);
-            if (studentStatuslist.Count > 0)
-            {
-                return studentStatuslist;
+            if (studentStatuslist.Count == 0) { 
+                return null; 
             }
-            return null;
+            return studentStatuslist;
         }
 
         public Task<Student> CreateAsync(Student student) => _studentDal.CreateAsync(student);
@@ -51,10 +50,15 @@ namespace Core.StudentManager
         public async Task<List<Student>> UpdateStatusAsync(List<Student> students)
         {
             for (int i = 0; i < students.Count; i++)
+            {
                 students[i].Status = students[i].Marks < 10 ? Status.Rejected.ToString() : i < 15 ? Status.Approved.ToString() : Status.Waiting.ToString();
+            }
 
             var studentStatuslist = await _studentDal.UpdateStatusAsync(students);
-            if (studentStatuslist) return students;
+            if (studentStatuslist)
+            {
+                return students;
+            }
             return null;
         }
     }

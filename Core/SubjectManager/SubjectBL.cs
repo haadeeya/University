@@ -30,7 +30,10 @@ namespace Core.SubjectManager
         public async Task<IEnumerable<Subject>> GetAllAsync()
         {
             var allsubjects = await _subjectDal.GetAllAsync();
-                if (allsubjects == null)return null;
+            if (allsubjects == null) 
+            { 
+                return null; 
+            }
             return allsubjects;
         }
 

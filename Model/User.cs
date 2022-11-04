@@ -1,10 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Utility;
 
 namespace Model
 {
     public class User
     {
+        [DataColumnName("UserId")]
         public int Id { get; set; }
+
         [Required]
         public string Username { get; set; }
 

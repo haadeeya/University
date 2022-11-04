@@ -47,7 +47,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
+    <Compile Include="DataColumnNameAttribute.cs" />
+    <Compile Include="DataTableMapper.cs" />
     <Compile Include="MaximumAge.cs" />
     <Compile Include="MinimumAge.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -5,8 +5,12 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Linq;
+using System.Runtime.Remoting.Messaging;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 using University.Utility;
+using Utility;
 
 namespace Core.SubjectManager
 {
@@ -31,27 +35,21 @@ namespace Core.SubjectManager
 
         public async Task<IEnumerable<Subject>> GetAllAsync()
         {
+            ConnectionHelper helper = new ConnectionHelper(_conn);
             try
             {
                 string query = @"SELECT [SubjectId], [SubjectName] FROM [Subject]";
                 List<SqlParameter> parameters = new List<SqlParameter>();
+                
+                DataTable dataTable = await helper.GetData(query, parameters);
 
-                DataTable dataTable =  await (new ConnectionHelper(_conn)).GetData(query);
 
                 if (dataTable.Rows.Count == 0)
                 {
                     return null;
                 }
-            
-                List<Subject> subjects = new List<Subject>();
 
-                foreach (DataRow row in dataTable.Rows)
-                {
-                    Subject subject = new Subject(Convert.ToInt32(row["SubjectId"]), row["SubjectName"].ToString());
-                    subjects.Add(subject);
-                }
-
-                return subjects;
+                return DataTableMapper.MapTo<Subject>(dataTable).ToList();
             }
             catch (Exception exception)
             {

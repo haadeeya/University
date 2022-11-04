@@ -36,14 +36,14 @@ namespace University.Controllers
 
             if (user == null)
             {
-                return Json(new { result = false, error = "Password and username do not match or user does not exist." }, JsonRequestBehavior.AllowGet); ; ;
+                return Json(new { result = false, error = "Password and username do not match or user does not exist." }, JsonRequestBehavior.AllowGet);
             }
 
             Session["CurrentUser"] = user;
 
-            if (user.Role == Role.Admin)
-            {
-                return Json(new { url = Url.Action("AdminHome", "Admin") }, JsonRequestBehavior.AllowGet);
+            if (user.Role == Role.Admin) 
+            { 
+                return Json(new { url = Url.Action("AdminHome", "Admin") }, JsonRequestBehavior.AllowGet); 
             }
 
             return Json(new { url = Url.Action("Index", "Student") }, JsonRequestBehavior.AllowGet);
@@ -87,9 +87,7 @@ namespace University.Controllers
                     return Json(new { url = Url.Action("Index", "Student") }, JsonRequestBehavior.AllowGet);
                 }
             }
-
             return Json(new { error = "Please enter your details properly." }, JsonRequestBehavior.AllowGet);
-
         }
 
         public ActionResult Logout()

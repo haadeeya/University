@@ -6,8 +6,10 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Reflection;
 using System.Threading.Tasks;
 using University.Utility;
+using Utility;
 using IDbCommand = Interface.IDbCommand;
 
 namespace Core.Registration
@@ -28,12 +30,13 @@ namespace Core.Registration
             try
             {
                 string query = $"INSERT INTO [User](Username, Email, Password, Role) VALUES(@Username, @Email, @Password, @Role)";
-                List<SqlParameter> parameters = new List<SqlParameter>();
-
-                parameters.Add(new SqlParameter("@Username", user.Username));
-                parameters.Add(new SqlParameter("@Email", user.Email));
-                parameters.Add(new SqlParameter("@Password", user.Password));
-                parameters.Add(new SqlParameter("@Role", (int)user.Role));
+                List<SqlParameter> parameters = new List<SqlParameter>()
+                {
+                    new SqlParameter("@Username", user.Username),
+                    new SqlParameter("@Email", user.Email),
+                    new SqlParameter("@Password", user.Password),
+                    new SqlParameter("@Role", (int)user.Role)
+                };
 
                 int rows = await helper.UpdateAndInsertData(query, parameters);
 
@@ -64,8 +67,10 @@ namespace Core.Registration
             {
                 string query = @"SELECT [UserId] , [Username], [Password], [Email], [Role]
                                 FROM [User] WHERE Username = @Username";
-                List<SqlParameter> parameters = new List<SqlParameter>();
-                parameters.Add(new SqlParameter("@Username", username));
+                List<SqlParameter> parameters = new List<SqlParameter>()
+                {
+                    new SqlParameter("@Username", username)
+                };
 
                 DataTable dataTable = await helper.GetData(query, parameters);
 
@@ -74,16 +79,7 @@ namespace Core.Registration
                     return null;
                 }
 
-                DataRow row = dataTable.Rows[0];
-
-                return new User()
-                {
-                    Id = Convert.ToInt32(row["UserId"]),
-                    Username = row["Username"].ToString(),
-                    Password = row["Password"].ToString(),
-                    Email = row["Email"].ToString(),
-                    Role = (Role)Convert.ToInt32(row["Role"])
-                };
+                return DataTableMapper.MapTo<User>(dataTable.Rows[0]);
             }
             catch (Exception exception)
             {
@@ -110,26 +106,20 @@ namespace Core.Registration
             {
                 string query = @"SELECT [UserId], [Username], [Email], [Password], [Role] 
                                 FROM [User] WHERE Username = @Username AND Password = @Password";
-                List<SqlParameter> parameters = new List<SqlParameter>();
-                parameters.Add(new SqlParameter("@Username", login.Username));
-                parameters.Add(new SqlParameter("@Password", login.Password));
-
-                DataTable dataTable =  await helper.GetData(query, parameters);
-
-                if (dataTable.Rows.Count > 0)
+                List<SqlParameter> parameters = new List<SqlParameter>()
                 {
-                    var row = dataTable.Rows[0];
+                    new SqlParameter("@Username", login.Username),
+                    new SqlParameter("@Password", login.Password)
+                };
 
-                    return new User()
-                    {
-                        Id = Convert.ToInt32(row["UserId"]),
-                        Username = row["Username"].ToString(),
-                        Password = row["Password"].ToString(),
-                        Email = row["Email"].ToString(),
-                        Role = (Role)Convert.ToInt32(row["Role"])
-                    };
+                DataTable dataTable = await helper.GetData(query, parameters);
+
+                if (dataTable.Rows.Count == 0)
+                {
+                    return null;
                 }
-                return null;
+
+                return DataTableMapper.MapTo<User>(dataTable.Rows[0]);
             }
             catch (Exception exception)
             {
