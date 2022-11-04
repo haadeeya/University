@@ -13,11 +13,11 @@ namespace Core.StudentManager
 {
     public class StudentDAL : IStudentDAL
     {
-        private readonly Interface.IDbCommand _dbCommand;
+        private readonly SqlConnection _conn;
 
-        public StudentDAL()
+        public StudentDAL(SqlConnection conn)
         {
-            _dbCommand = new DBCommand();
+            _conn = conn;
         }
 
         public async Task<Student> CreateAsync(Student entity)
@@ -27,12 +27,8 @@ namespace Core.StudentManager
             string insertSubjectQuery = @"INSERT INTO [StudentSubject](StudentId, SubjectId, Grade) VALUES(@StudentId, @SubjectId, @Grade);";
 
 
-            if (_dbCommand.Connection.State == ConnectionState.Closed)
-            {
-                _dbCommand.Connection.Open();
-            }
-
-            IDbTransaction transaction = _dbCommand.Connection.BeginTransaction();
+            ConnectionHelper helper = new ConnectionHelper(_conn);
+            SqlTransaction transaction = await helper.BeginTransaction();
 
             try
             {
@@ -47,7 +43,7 @@ namespace Core.StudentManager
                 insertStudentParameters.Add(new SqlParameter("@DateOfBirth", entity.DateOfBirth));
                 insertStudentParameters.Add(new SqlParameter("@PhoneNumber", entity.PhoneNumber));
 
-                await _dbCommand.UpdateAndInsertData(insertStudentQuery, insertStudentParameters, transaction);
+                await helper.UpdateAndInsertData(insertStudentQuery, insertStudentParameters, transaction);
 
                 foreach (var subject in entity.Subjects)
                 {
@@ -57,19 +53,19 @@ namespace Core.StudentManager
                     insertSubjectParameters.Add((new SqlParameter("@SubjectId", subject.SubjectId)));
                     insertSubjectParameters.Add((new SqlParameter("@Grade", subject.Grade)));
 
-                    await _dbCommand.UpdateAndInsertData(insertSubjectQuery, insertSubjectParameters, transaction);
+                    await helper.UpdateAndInsertData(insertSubjectQuery, insertSubjectParameters, transaction);
                 }
 
                 transaction.Commit();
             }
-            catch
+            catch (Exception exception)
             {
+                MyLogger.GetInstance().Error($"Error {exception.Message}");
                 transaction.Rollback();
                 throw;
             }
             finally
             {
-                _dbCommand.Connection.Close();
                 transaction.Dispose();
             }
 
@@ -83,27 +79,31 @@ namespace Core.StudentManager
 
         public async Task<IEnumerable<Student>> GetAllAsync()
         {
-    try
-    {
-        string query = @"SELECT s.[StudentId], [UserId], [Name], [Surname], 
+            ConnectionHelper helper = new ConnectionHelper(_conn);
+
+            try
+            {
+                string query = @"SELECT s.[StudentId], [UserId], [Name], [Surname], 
                             [NID], [GuardianName], [EmailAddress], [DateOfBirth], [PhoneNumber], [SubjectName],
                             sb.[SubjectId], [StudentSubjectId], [Grade]
                             FROM [Student] s
                             INNER JOIN [StudentSubject] ss on ss.StudentId = s.StudentId
                             INNER JOIN [Subject] sb on sb.SubjectId = ss.SubjectId";
 
-        List<Student> allstudents = new List<Student>();
-        Student student = new Student();
-
-        var dt = await _dbCommand.GetData(query);
-
-    var result = dt.AsEnumerable()
-                .GroupBy(x => new { Id = x.Field<int>("StudentId"),
-                    UserId = x.Field<int>("UserId"), Name = x.Field<string>("Name"),
-                    Surname = x.Field<string>("Surname"), GuardianName = x.Field<string>("GuardianName"),
-                    NID = x.Field<string>("NID"), EmailAddress = x.Field<string>("EmailAddress"),
-                    DateOfBirth = x.Field<DateTime>("DateOfBirth"), PhoneNumber = x.Field<string>("PhoneNumber")
-                })
+                DataTable dataTable = await helper.GetData(query);
+                IEnumerable<Student> result = dataTable.AsEnumerable()
+                    .GroupBy(x => new
+                    {
+                        Id = x.Field<int>("StudentId"),
+                        UserId = x.Field<int>("UserId"),
+                        Name = x.Field<string>("Name"),
+                        Surname = x.Field<string>("Surname"),
+                        GuardianName = x.Field<string>("GuardianName"),
+                        NID = x.Field<string>("NID"),
+                        EmailAddress = x.Field<string>("EmailAddress"),
+                        DateOfBirth = x.Field<DateTime>("DateOfBirth"),
+                        PhoneNumber = x.Field<string>("PhoneNumber")
+                    })
                     .Select(x => new Student()
                     {
                         Id = x.Key.Id,
@@ -115,28 +115,29 @@ namespace Core.StudentManager
                         EmailAddress = x.Key.EmailAddress,
                         DateOfBirth = x.Key.DateOfBirth,
                         PhoneNumber = x.Key.PhoneNumber,
-                        Subjects = x.Select(y => new StudentSubject() { 
-                            StudentSubjectId = y.Field<int>("StudentSubjectId"), Grade = y.Field<string>("Grade"),
-                            StudentId = y.Field<int>("StudentId"), SubjectId = y.Field<int>("SubjectId"),
+                        Subjects = x.Select(y => new StudentSubject()
+                        {
+                            StudentSubjectId = y.Field<int>("StudentSubjectId"),
+                            Grade = y.Field<string>("Grade"),
+                            StudentId = y.Field<int>("StudentId"),
+                            SubjectId = y.Field<int>("SubjectId"),
                             Subject = new Subject(y.Field<int>("SubjectId"), y.Field<string>("SubjectName"))
                         }).ToList()
                     });
 
-        return result;
-    }
-        catch (Exception exception)
-        {
-            MyLogger.GetInstance().Error($"Error {exception.Message}");
-            throw;
-        }
-        finally
-        {
-            _dbCommand.Connection.Close();
-        }
+                return result;
+            }
+            catch (Exception exception)
+            {
+                MyLogger.GetInstance().Error($"Error {exception.Message}");
+                throw;
+            }
         }
 
         public async Task<Student> GetByIdAsync(int id)
         {
+            ConnectionHelper helper = new ConnectionHelper(_conn);
+
             try
             {
                 string query = @"SELECT * FROM [Student] s
@@ -144,45 +145,48 @@ namespace Core.StudentManager
                                 INNER JOIN Subject sb on sb.SubjectId = ss.SubjectId
                                 WHERE s.StudentId = @StudentId";
                 List<SqlParameter> parameters = new List<SqlParameter>();
-
                 parameters.Add(new SqlParameter("@StudentId", id));
 
-                Student student = new Student();
-                List<StudentSubject> allsubjects = new List<StudentSubject>();
+                DataTable dataTable = await helper.GetData(query, parameters);
 
-                var dt = await _dbCommand.GetDataWithConditions(query, parameters);
-
-                if (dt.Rows.Count > 0)
-                {
-                    foreach (DataRow row in dt.Rows)
-                    {
-                        student.Id = Convert.ToInt32(row["StudentId"]);
-                        student.Surname = row["Surname"].ToString();
-                        student.Name = row["Name"].ToString();
-                        student.GuardianName = row["GuardianName"].ToString();
-                        student.EmailAddress = row["EmailAddress"].ToString();
-                        student.NID = row["NID"].ToString();
-                        student.DateOfBirth = DateTime.Parse(row["DateOfBirth"].ToString());
-                        student.PhoneNumber = row["PhoneNumber"].ToString();
-                        allsubjects.Add(new StudentSubject(Convert.ToInt32(row["StudentId"]), Convert.ToInt32(row["SubjectId"]), Convert.ToInt32(row["StudentSubjectId"]), new Subject(Convert.ToInt32(row["SubjectId"]), row["SubjectName"].ToString()), row["Grade"].ToString()));
-                        student.Subjects = allsubjects;
-                    }
-                    return student;
-                }
-                else
+                if (dataTable.Rows.Count == 0)
                 {
                     return null;
                 }
+
+                Student student = new Student();
+                List<StudentSubject> subjects = new List<StudentSubject>();
+
+                foreach (DataRow row in dataTable.Rows)
+                {
+                    student.Id = Convert.ToInt32(row["StudentId"]);
+                    student.Surname = row["Surname"].ToString();
+                    student.Name = row["Name"].ToString();
+                    student.GuardianName = row["GuardianName"].ToString();
+                    student.EmailAddress = row["EmailAddress"].ToString();
+                    student.NID = row["NID"].ToString();
+                    student.DateOfBirth = DateTime.Parse(row["DateOfBirth"].ToString());
+                    student.PhoneNumber = row["PhoneNumber"].ToString();
+
+                    subjects.Add(new StudentSubject(
+                        Convert.ToInt32(row["StudentId"]),
+                        Convert.ToInt32(row["SubjectId"]),
+                        Convert.ToInt32(row["StudentSubjectId"]),
+                        new Subject(Convert.ToInt32(row["SubjectId"]),
+                        row["SubjectName"].ToString()),
+                        row["Grade"].ToString())
+                    );
+
+                    student.Subjects = subjects;
+                }
+
+                return student;
 
             }
             catch (Exception exception)
             {
                 MyLogger.GetInstance().Error($"Error {exception.Message}");
                 throw;
-            }
-            finally
-            {
-                _dbCommand.Connection.Close();
             }
         }
 
@@ -193,44 +197,38 @@ namespace Core.StudentManager
 
         public async Task<bool> UpdateStatusAsync(List<Student> students)
         {
-            bool isStatusUpdated = false;
-            string updateStudentQuery = @"UPDATE [Student]
-                                          SET [Status] = @Status
-                                          WHERE [StudentId] = @StudentId;";
+            ConnectionHelper helper = new ConnectionHelper(_conn);
+            SqlTransaction transaction = await helper.BeginTransaction();
 
-
-            if (_dbCommand.Connection.State == ConnectionState.Closed)
-            {
-                _dbCommand.Connection.Open();
-            }
-
-            IDbTransaction transaction = _dbCommand.Connection.BeginTransaction();
             try
             {
-                
-                foreach (var student in students)
+                foreach (Student student in students)
                 {
+                    string updateStudentQuery = @"UPDATE [Student]
+                                                  SET [Status] = @Status
+                                                  WHERE [StudentId] = @StudentId;";
+
                     List<SqlParameter> updateStudentParameters = new List<SqlParameter>();
                     updateStudentParameters.Add((new SqlParameter("@StudentId", student.Id)));
                     updateStudentParameters.Add((new SqlParameter("@Status", student.Status)));
 
-                    await _dbCommand.UpdateAndInsertData(updateStudentQuery, updateStudentParameters, transaction);
+                    await helper.UpdateAndInsertData(updateStudentQuery, updateStudentParameters, transaction);
                 }
+
                 transaction.Commit();
-                isStatusUpdated = true;
+
+                return true;
             }
-            catch
+            catch (Exception exception)
             {
+                MyLogger.GetInstance().Error($"Error {exception.Message}");
                 transaction.Rollback();
                 throw;
             }
             finally
             {
-                _dbCommand.Connection.Close();
                 transaction.Dispose();
             }
-
-            return isStatusUpdated;
         }
     }
 }

@@ -41,7 +41,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
     <Compile Include="IDbCommand.cs" />
     <Compile Include="Repository\IRepositoryBL.cs" />
     <Compile Include="Repository\IRepositoryDAL.cs" />

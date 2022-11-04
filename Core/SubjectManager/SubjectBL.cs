@@ -11,10 +11,12 @@ namespace Core.SubjectManager
     public class SubjectBL : ISubjectBL
     {
         private readonly ISubjectDAL _subjectDal;
-        public SubjectBL()
+
+        public SubjectBL(ISubjectDAL subjectDal)
         {
-            _subjectDal = new SubjectDAL();
+            _subjectDal = subjectDal;
         }
+
         public Task<Subject> CreateAsync(Subject entity)
         {
             throw new NotImplementedException();

@@ -14,27 +14,30 @@ namespace Core.Registration
 {
     public class UserDAL : IUserDAL, IRepositoryDAL<User>
     {
-        private readonly IDbCommand _dbCommand;
-        public UserDAL()
+        private readonly SqlConnection _conn;
+
+        public UserDAL(SqlConnection conn)
         {
-            _dbCommand = new DBCommand();
+            _conn = conn;
         }
 
-        public async Task<User> CreateAsync(User newuser)
+        public async Task<User> CreateAsync(User user)
         {
+            ConnectionHelper helper = new ConnectionHelper(_conn);
+
             try
             {
                 string query = $"INSERT INTO [User](Username, Email, Password, Role) VALUES(@Username, @Email, @Password, @Role)";
                 List<SqlParameter> parameters = new List<SqlParameter>();
 
-                parameters.Add(new SqlParameter("@Username", newuser.Username));
-                parameters.Add(new SqlParameter("@Email", newuser.Email));
-                parameters.Add(new SqlParameter("@Password", newuser.Password));
-                parameters.Add(new SqlParameter("@Role", (int)newuser.Role));
+                parameters.Add(new SqlParameter("@Username", user.Username));
+                parameters.Add(new SqlParameter("@Email", user.Email));
+                parameters.Add(new SqlParameter("@Password", user.Password));
+                parameters.Add(new SqlParameter("@Role", (int)user.Role));
 
-                var result =  await _dbCommand.UpdateAndInsertData(query, parameters);
+                int rows = await helper.UpdateAndInsertData(query, parameters);
 
-                return result > 0 ? newuser : null;
+                return rows > 0 ? user : null;
             }
             catch (Exception exception)
             {
@@ -55,28 +58,32 @@ namespace Core.Registration
 
         public async Task<User> GetByUsername(string username)
         {
+            ConnectionHelper helper = new ConnectionHelper(_conn);
+
             try
             {
                 string query = @"SELECT [UserId] , [Username], [Password], [Email], [Role]
                                 FROM [User] WHERE Username = @Username";
                 List<SqlParameter> parameters = new List<SqlParameter>();
-
                 parameters.Add(new SqlParameter("@Username", username));
 
-                var result = await _dbCommand.GetDataWithConditions(query, parameters);
-                if(result.Rows.Count > 0)
+                DataTable dataTable = await helper.GetData(query, parameters);
+
+                if (dataTable.Rows.Count == 0)
                 {
-                    var row = result.Rows[0];
-                    return new User()
-                    {
-                        Id = Convert.ToInt32(row["UserId"]),
-                        Username = row["Username"].ToString(),
-                        Password = row["Password"].ToString(),
-                        Email = row["Email"].ToString(),
-                        Role = (Role)Convert.ToInt32(row["Role"])
-                    };
+                    return null;
                 }
-                return null;
+
+                DataRow row = dataTable.Rows[0];
+
+                return new User()
+                {
+                    Id = Convert.ToInt32(row["UserId"]),
+                    Username = row["Username"].ToString(),
+                    Password = row["Password"].ToString(),
+                    Email = row["Email"].ToString(),
+                    Role = (Role)Convert.ToInt32(row["Role"])
+                };
             }
             catch (Exception exception)
             {
@@ -95,19 +102,19 @@ namespace Core.Registration
             throw new NotImplementedException();
         }
 
-        async Task<DataTable> IUserDAL.Get(Login login)
+        public async Task<DataTable> Get(Login login)
         {
+            ConnectionHelper helper = new ConnectionHelper(_conn);
+
             try
             {
                 string query = @"SELECT [UserId], [Username], [Email], [Password], [Role] 
                                 FROM [User] WHERE Username = @Username AND Password = @Password";
                 List<SqlParameter> parameters = new List<SqlParameter>();
-
                 parameters.Add(new SqlParameter("@Username", login.Username));
                 parameters.Add(new SqlParameter("@Password", login.Password));
 
-                var result = await _dbCommand.GetDataWithConditions(query, parameters);
-                return result;
+                return await helper.GetData(query, parameters);
             }
             catch (Exception exception)
             {
@@ -115,7 +122,5 @@ namespace Core.Registration
                 throw;
             }
         }
-
-
     }
 }

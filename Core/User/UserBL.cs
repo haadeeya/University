@@ -3,7 +3,6 @@ using System.Security.Cryptography;
 using System.Text;
 using System;
 using Model;
-using System.Data;
 using Interface.Repository;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -76,8 +75,8 @@ namespace Core.Registration
             throw new NotImplementedException();
         }
 
-        public async Task<User> GetByUsername(string username)=> await _userDal.GetByUsername(username);
-        
+        public async Task<User> GetByUsername(string username) => await _userDal.GetByUsername(username);
+
 
         public Task<User> UpdateAsync(User entity)
         {
