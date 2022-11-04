@@ -12,10 +12,10 @@ using IDbCommand = Interface.IDbCommand;
 
 namespace Core.Registration
 {
-    public class UserDal : IUserDal, IRepositoryDal<User>
+    public class UserDAL : IUserDAL, IRepositoryDAL<User>
     {
         private readonly IDbCommand _dbCommand;
-        public UserDal()
+        public UserDAL()
         {
             _dbCommand = new DBCommand();
         }
@@ -95,7 +95,7 @@ namespace Core.Registration
             throw new NotImplementedException();
         }
 
-        async Task<DataTable> IUserDal.Get(Login login)
+        async Task<DataTable> IUserDAL.Get(Login login)
         {
             try
             {

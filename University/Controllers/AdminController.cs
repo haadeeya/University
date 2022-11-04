@@ -10,10 +10,11 @@ namespace University.Controllers
     {
         private readonly IStudentBL _studentBL;
 
-        public AdminController()
+        public AdminController(IStudentBL studentBL)
         {
-            _studentBL = new StudentBL();
+            _studentBL = studentBL;
         }
+
         public ActionResult AdminHome()
         {
             return View();

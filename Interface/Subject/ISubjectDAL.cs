@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Interface
 {
-    public interface ISubjectDAL : IRepositoryDal<Subject>
+    public interface ISubjectDAL : IRepositoryDAL<Subject>
     {
         Task<Subject> GetByIdAsync(int id);
         Task<IEnumerable<Subject>> GetAllAsync();

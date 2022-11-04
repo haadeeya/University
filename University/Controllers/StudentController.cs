@@ -16,11 +16,12 @@ namespace University.Controllers
         private readonly IUserBL _userBL;
         private readonly IRepositoryBL<Student> _studentBL;
         private readonly IRepositoryBL<Subject> _subjectBL;
-        public StudentController()
+
+        public StudentController(IUserBL userBL, IStudentBL studentBL, ISubjectBL subjectBL)
         {
-            _userBL = new UserBL();
-            _studentBL = new StudentBL();
-            _subjectBL = new SubjectBL();
+            _userBL = userBL;
+            _studentBL = studentBL;
+            _subjectBL = subjectBL;
         }
 
         public async Task<ActionResult> Index()

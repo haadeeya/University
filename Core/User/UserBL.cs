@@ -10,12 +10,13 @@ using System.Threading.Tasks;
 
 namespace Core.Registration
 {
-    public class UserBL : IUserBL, IRepositoryDal<User>
+    public class UserBL : IUserBL, IRepositoryDAL<User>
     {
-        private readonly IUserDal _userDal;
-        public UserBL()
+        private readonly IUserDAL _userDal;
+
+        public UserBL(IUserDAL userDal)
         {
-            _userDal = new UserDal();
+            _userDal = userDal;
         }
 
         public async Task<User> Authenticate(Login login)

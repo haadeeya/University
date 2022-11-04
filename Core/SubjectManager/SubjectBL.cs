@@ -13,7 +13,7 @@ namespace Core.SubjectManager
         private readonly ISubjectDAL _subjectDal;
         public SubjectBL()
         {
-            _subjectDal = new SubjectDal();
+            _subjectDal = new SubjectDAL();
         }
         public Task<Subject> CreateAsync(Subject entity)
         {

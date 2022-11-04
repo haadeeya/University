@@ -1,6 +1,5 @@
 ﻿using DataAccess;
 using Interface;
-using Interface.Repository;
 using Model;
 using System;
 using System.Collections.Generic;
@@ -12,11 +11,11 @@ using University.Utility;
 
 namespace Core.StudentManager
 {
-    public class StudentDal : IStudentDAL
+    public class StudentDAL : IStudentDAL
     {
         private readonly Interface.IDbCommand _dbCommand;
 
-        public StudentDal()
+        public StudentDAL()
         {
             _dbCommand = new DBCommand();
         }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Interface
 {
-    public interface IUserDal : IRepositoryDal<User>
+    public interface IUserDAL : IRepositoryDAL<User>
     {
         Task<IEnumerable<User>> GetAllAsync();
         Task<User> GetByIdAsync(int id);

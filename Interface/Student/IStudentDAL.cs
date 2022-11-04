@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Interface
 {
-    public interface IStudentDAL:IRepositoryDal<Student>
+    public interface IStudentDAL:IRepositoryDAL<Student>
     {
         Task<Student> GetByIdAsync(int id);
         Task<IEnumerable<Student>> GetAllAsync();

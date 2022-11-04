@@ -12,13 +12,15 @@ using IDbCommand = Interface.IDbCommand;
 
 namespace Core.SubjectManager
 {
-    public class SubjectDal : ISubjectDAL
+    public class SubjectDAL : ISubjectDAL
     {
         private readonly IDbCommand _dbCommand;
-        public SubjectDal()
+
+        public SubjectDAL()
         {
             _dbCommand = new DBCommand();
         }
+
         public Task<Subject> CreateAsync(Subject entity)
         {
             throw new NotImplementedException();

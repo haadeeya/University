@@ -44,13 +44,13 @@
     <Compile Include="Class1.cs" />
     <Compile Include="IDbCommand.cs" />
     <Compile Include="Repository\IRepositoryBL.cs" />
-    <Compile Include="Repository\IRepositoryDal.cs" />
+    <Compile Include="Repository\IRepositoryDAL.cs" />
     <Compile Include="Student\IStudentBL.cs" />
     <Compile Include="Student\IStudentDAL.cs" />
     <Compile Include="Subject\ISubjectBL.cs" />
     <Compile Include="Subject\ISubjectDAL.cs" />
     <Compile Include="User\IUserBL.cs" />
-    <Compile Include="User\IUserDal.cs" />
+    <Compile Include="User\IUserDAL.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
