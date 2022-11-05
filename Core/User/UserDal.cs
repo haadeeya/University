@@ -6,11 +6,9 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Reflection;
 using System.Threading.Tasks;
 using University.Utility;
 using Utility;
-using IDbCommand = Interface.IDbCommand;
 
 namespace Core.Registration
 {
@@ -30,13 +28,19 @@ namespace Core.Registration
             try
             {
                 string query = $"INSERT INTO [User](Username, Email, Password, Role) VALUES(@Username, @Email, @Password, @Role)";
-                List<SqlParameter> parameters = new List<SqlParameter>()
+                List<SqlParameter> parameters = new List<SqlParameter>();
+                //{
+                //    new SqlParameter("@Username", user.Username),
+                //    new SqlParameter("@Email", user.Email),
+                //    new SqlParameter("@Password", user.Password),
+                //    new SqlParameter("@Role", (int)user.Role)
+                //};
+
+                foreach (var prop in user.GetType().GetProperties())
                 {
-                    new SqlParameter("@Username", user.Username),
-                    new SqlParameter("@Email", user.Email),
-                    new SqlParameter("@Password", user.Password),
-                    new SqlParameter("@Role", (int)user.Role)
-                };
+                    if (prop.Name.Equals("UserId")) continue;
+                    parameters.Add(new SqlParameter($"@{prop.Name}", prop.GetValue(user, null)));
+                }
 
                 int rows = await helper.UpdateAndInsertData(query, parameters);
 
@@ -106,11 +110,16 @@ namespace Core.Registration
             {
                 string query = @"SELECT [UserId], [Username], [Email], [Password], [Role] 
                                 FROM [User] WHERE Username = @Username AND Password = @Password";
-                List<SqlParameter> parameters = new List<SqlParameter>()
+                List<SqlParameter> parameters = new List<SqlParameter>();
+                //{
+                //    new SqlParameter("@Username", login.Username),
+                //    new SqlParameter("@Password", login.Password)
+                //};
+
+                foreach (var prop in login.GetType().GetProperties())
                 {
-                    new SqlParameter("@Username", login.Username),
-                    new SqlParameter("@Password", login.Password)
-                };
+                    parameters.Add(new SqlParameter($"@{prop.Name}", prop.GetValue(login, null)));
+                }
 
                 DataTable dataTable = await helper.GetData(query, parameters);
 
