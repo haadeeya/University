@@ -25,11 +25,7 @@ namespace University.Controllers
         {
             var allstudents = await _studentBL.GetAllAsync();
             if (allstudents == null)return Json(null);
-            var markedstudents = await _studentBL.ComputeMarkAndStatusAsync(allstudents.ToList());
-            if (markedstudents == null)
-            {
-                return null;
-            }
+            var markedstudents = await _studentBL.ComputeMark(allstudents.ToList());
             return Json(markedstudents, JsonRequestBehavior.AllowGet);
         }
     }

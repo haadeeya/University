@@ -51,6 +51,7 @@
     <Compile Include="Subject.cs" />
     <Compile Include="User.cs" />
     <Compile Include="Role.cs" />
+    <Compile Include="ViewModels\UserViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Utility\Utility.csproj">

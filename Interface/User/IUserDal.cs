@@ -1,7 +1,7 @@
 ﻿using Interface.Repository;
 using Model;
+using Model.ViewModels;
 using System.Collections.Generic;
-using System.Data;
 using System.Threading.Tasks;
 
 namespace Interface

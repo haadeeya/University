@@ -13,13 +13,11 @@ namespace University.Controllers
 {
     public class StudentController : Controller
     {
-        private readonly IUserBL _userBL;
-        private readonly IRepositoryBL<Student> _studentBL;
-        private readonly IRepositoryBL<Subject> _subjectBL;
+        private readonly IStudentBL _studentBL;
+        private readonly ISubjectBL _subjectBL;
 
-        public StudentController(IUserBL userBL, IStudentBL studentBL, ISubjectBL subjectBL)
+        public StudentController(IStudentBL studentBL, ISubjectBL subjectBL)
         {
-            _userBL = userBL;
             _studentBL = studentBL;
             _subjectBL = subjectBL;
         }

@@ -23,8 +23,8 @@ namespace Core.StudentManager
 
         public async Task<Student> CreateAsync(Student entity)
         {
-            string insertStudentQuery = @"INSERT INTO [Student](StudentId, UserId, Name, Surname, NID, GuardianName, EmailAddress, DateOfBirth, PhoneNumber)
-                                 VALUES(@StudentId, @UserId, @Name, @Surname, @NID, @GuardianName, @EmailAddress, @DateOfBirth, @PhoneNumber);";
+            string insertStudentQuery = @"INSERT INTO [Student](StudentId, UserId, Name, Surname, NID, GuardianName, EmailAddress, DateOfBirth, PhoneNumber, Status)
+                                 VALUES(@StudentId, @UserId, @Name, @Surname, @NID, @GuardianName, @EmailAddress, @DateOfBirth, @PhoneNumber, @Status);";
             string insertSubjectQuery = @"INSERT INTO [StudentSubject](StudentId, SubjectId, Grade) VALUES(@StudentId, @SubjectId, @Grade);";
 
 
@@ -43,6 +43,7 @@ namespace Core.StudentManager
                 insertStudentParameters.Add(new SqlParameter("@EmailAddress", entity.EmailAddress));
                 insertStudentParameters.Add(new SqlParameter("@DateOfBirth", entity.DateOfBirth));
                 insertStudentParameters.Add(new SqlParameter("@PhoneNumber", entity.PhoneNumber));
+                insertStudentParameters.Add(new SqlParameter("@Status", entity.Status));
 
                 await helper.UpdateAndInsertData(insertStudentQuery, insertStudentParameters, transaction);
 
@@ -86,7 +87,7 @@ namespace Core.StudentManager
             {
                 string query = @"SELECT s.[StudentId], [UserId], [Name], [Surname], 
                             [NID], [GuardianName], [EmailAddress], [DateOfBirth], [PhoneNumber], [SubjectName],
-                            sb.[SubjectId], [StudentSubjectId], [Grade]
+                            sb.[SubjectId], [StudentSubjectId], [Grade], [Status]
                             FROM [Student] s
                             INNER JOIN [StudentSubject] ss on ss.StudentId = s.StudentId
                             INNER JOIN [Subject] sb on sb.SubjectId = ss.SubjectId";
@@ -103,7 +104,8 @@ namespace Core.StudentManager
                         NID = x.Field<string>("NID"),
                         EmailAddress = x.Field<string>("EmailAddress"),
                         DateOfBirth = x.Field<DateTime>("DateOfBirth"),
-                        PhoneNumber = x.Field<string>("PhoneNumber")
+                        PhoneNumber = x.Field<string>("PhoneNumber"),
+                        Status = x.Field<string>("Status")
                     })
                     .Select(x => new Student()
                     {
@@ -116,6 +118,7 @@ namespace Core.StudentManager
                         EmailAddress = x.Key.EmailAddress,
                         DateOfBirth = x.Key.DateOfBirth,
                         PhoneNumber = x.Key.PhoneNumber,
+                        Status = x.Key.Status,
                         Subjects = x.Select(y => new StudentSubject()
                         {
                             StudentSubjectId = y.Field<int>("StudentSubjectId"),
