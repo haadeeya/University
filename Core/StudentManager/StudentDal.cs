@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using University.Utility;
@@ -20,7 +21,7 @@ namespace Core.StudentManager
             _conn = conn;
         }
 
-        public async Task<Student> CreateAsync(Student entity)
+        public async Task<Student> CreateAsync(Student student)
         {
             string insertStudentQuery = @"INSERT INTO [Student](StudentId, UserId, Name, Surname, NID, GuardianName, EmailAddress, DateOfBirth, PhoneNumber, Status)
                                  VALUES(@StudentId, @UserId, @Name, @Surname, @NID, @GuardianName, @EmailAddress, @DateOfBirth, @PhoneNumber, @Status);";
@@ -33,26 +34,44 @@ namespace Core.StudentManager
             try
             {
                 List<SqlParameter> insertStudentParameters = new List<SqlParameter>();
-                insertStudentParameters.Add(new SqlParameter("@StudentId", entity.Id));
-                insertStudentParameters.Add(new SqlParameter("@UserId", entity.UserId));
-                insertStudentParameters.Add(new SqlParameter("@NID", entity.NID));
-                insertStudentParameters.Add(new SqlParameter("@Name", entity.Name));
-                insertStudentParameters.Add(new SqlParameter("@Surname", entity.Surname));
-                insertStudentParameters.Add(new SqlParameter("@GuardianName", entity.GuardianName));
-                insertStudentParameters.Add(new SqlParameter("@EmailAddress", entity.EmailAddress));
-                insertStudentParameters.Add(new SqlParameter("@DateOfBirth", entity.DateOfBirth));
-                insertStudentParameters.Add(new SqlParameter("@PhoneNumber", entity.PhoneNumber));
-                insertStudentParameters.Add(new SqlParameter("@Status", entity.Status));
+                Type studentType = student.GetType();
+                //insertStudentParameters.Add(new SqlParameter("@StudentId", entity.Id));
+                //insertStudentParameters.Add(new SqlParameter("@UserId", entity.UserId));
+                //insertStudentParameters.Add(new SqlParameter("@NID", entity.NID));
+                //insertStudentParameters.Add(new SqlParameter("@Name", entity.Name));
+                //insertStudentParameters.Add(new SqlParameter("@Surname", entity.Surname));
+                //insertStudentParameters.Add(new SqlParameter("@GuardianName", entity.GuardianName));
+                //insertStudentParameters.Add(new SqlParameter("@EmailAddress", entity.EmailAddress));
+                //insertStudentParameters.Add(new SqlParameter("@DateOfBirth", entity.DateOfBirth));
+                //insertStudentParameters.Add(new SqlParameter("@PhoneNumber", entity.PhoneNumber));
+                //insertStudentParameters.Add(new SqlParameter("@Status", entity.Status));
+
+                foreach (var prop in student.GetType().GetProperties())
+                {
+                    Debug.WriteLine(IsPrimitive(prop.PropertyType));
+                    if (IsPrimitive(prop.PropertyType) && prop.Name!="Marks")
+                    {
+                        insertStudentParameters.Add(new SqlParameter($"@{prop.Name}", prop.GetValue(student, null)));
+                    }
+                }
 
                 await helper.UpdateAndInsertData(insertStudentQuery, insertStudentParameters, transaction);
 
-                foreach (var subject in entity.Subjects)
+                foreach (var subject in student.Subjects)
                 {
                     List<SqlParameter> insertSubjectParameters = new List<SqlParameter>();
+                    Type subjectType = subject.GetType();
 
-                    insertSubjectParameters.Add((new SqlParameter("@StudentId", subject.StudentId)));
-                    insertSubjectParameters.Add((new SqlParameter("@SubjectId", subject.SubjectId)));
-                    insertSubjectParameters.Add((new SqlParameter("@Grade", subject.Grade)));
+                    foreach(var property in subject.GetType().GetProperties())
+                    {
+                        if (property.Name.Equals("StudentId") || property.Name.Equals("SubjectId") || property.Name.Equals("Grade"))
+                        {
+                            insertSubjectParameters.Add(new SqlParameter($"@{property.Name}", property.GetValue(subject, null)));
+                        }
+                    }
+                    //insertSubjectParameters.Add(new SqlParameter("@StudentId", subject.StudentId));
+                    //insertSubjectParameters.Add(new SqlParameter("@SubjectId", subject.SubjectId));
+                    //insertSubjectParameters.Add(new SqlParameter("@Grade", subject.Grade));
 
                     await helper.UpdateAndInsertData(insertSubjectQuery, insertSubjectParameters, transaction);
                 }
@@ -70,7 +89,7 @@ namespace Core.StudentManager
                 transaction.Dispose();
             }
 
-            return entity;
+            return student;
         }
 
         public Task<bool> DeleteAsync(int studentId)
@@ -95,7 +114,7 @@ namespace Core.StudentManager
                 IEnumerable<Student> result = dataTable.AsEnumerable()
                     .GroupBy(x => new
                     {
-                        Id = x.Field<int>("StudentId"),
+                        StudentId = x.Field<int>("StudentId"),
                         UserId = x.Field<int>("UserId"),
                         Name = x.Field<string>("Name"),
                         Surname = x.Field<string>("Surname"),
@@ -108,7 +127,7 @@ namespace Core.StudentManager
                     })
                     .Select(x => new Student()
                     {
-                        Id = x.Key.Id,
+                        StudentId = x.Key.StudentId,
                         UserId = x.Key.UserId,
                         Name = x.Key.Name,
                         Surname = x.Key.Surname,
@@ -162,7 +181,7 @@ namespace Core.StudentManager
 
                 foreach (DataRow row in dataTable.Rows)
                 {
-                    student.Id = Convert.ToInt32(row["StudentId"]);
+                    student.StudentId = Convert.ToInt32(row["StudentId"]);
                     student.Surname = row["Surname"].ToString();
                     student.Name = row["Name"].ToString();
                     student.GuardianName = row["GuardianName"].ToString();
@@ -212,7 +231,7 @@ namespace Core.StudentManager
                                                   WHERE [StudentId] = @StudentId;";
 
                     List<SqlParameter> updateStudentParameters = new List<SqlParameter>();
-                    updateStudentParameters.Add((new SqlParameter("@StudentId", student.Id)));
+                    updateStudentParameters.Add((new SqlParameter("@StudentId", student.StudentId)));
                     updateStudentParameters.Add((new SqlParameter("@Status", student.Status)));
 
                     await helper.UpdateAndInsertData(updateStudentQuery, updateStudentParameters, transaction);
@@ -233,5 +252,26 @@ namespace Core.StudentManager
                 transaction.Dispose();
             }
         }
+
+        private static bool IsPrimitive(Type t)
+        {
+            return new[] {
+            typeof(string),
+            typeof(char),
+            typeof(byte),
+            typeof(sbyte),
+            typeof(ushort),
+            typeof(short),
+            typeof(uint),
+            typeof(int),
+            typeof(ulong),
+            typeof(long),
+            typeof(float),
+            typeof(double),
+            typeof(decimal),
+            typeof(DateTime),
+        }.Contains(t);
+        }
+
     }
 }

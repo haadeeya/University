@@ -7,7 +7,7 @@ namespace Model
 {
     public class Student
     {
-        public int Id { get; set; }
+        public int StudentId { get; set; }
         public int UserId { get; set; }
 
         [Required(ErrorMessage = "NID is required.")]

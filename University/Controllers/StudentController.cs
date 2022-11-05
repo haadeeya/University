@@ -56,11 +56,11 @@ namespace University.Controllers
             if (!ModelState.IsValid) return Json(new {result=false, allErrors = ModelState.Values.SelectMany(v => v.Errors) }, JsonRequestBehavior.AllowGet);
             
             var loggedUser = (User)Session["CurrentUser"];
-            student.Id = loggedUser.Id;
+            student.StudentId = loggedUser.Id;
             student.UserId = loggedUser.Id;
             foreach(var subject in student.Subjects)
             {
-                subject.StudentId = student.Id;
+                subject.StudentId = student.StudentId;
             }
             var newstudent = await _studentBL.CreateAsync(student);
             if (newstudent == null)return null;

@@ -52,7 +52,6 @@ namespace Core.StudentManager
             return await _studentDal.CreateAsync(student);
         }
         
-
         public Task<bool> DeleteAsync(int studentId) => _studentDal.DeleteAsync(studentId);
 
         public async Task<IEnumerable<Student>> GetAllAsync() => await _studentDal.GetAllAsync();

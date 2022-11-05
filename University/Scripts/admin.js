@@ -22,7 +22,7 @@
         var td9 = document.createElement('td');
         var td10 = document.createElement('td');
 
-        var text1 = document.createTextNode(jsonobj[i].Id);
+        var text1 = document.createTextNode(jsonobj[i].StudentId);
         var text2 = document.createTextNode(jsonobj[i].Surname);
         var text3 = document.createTextNode(jsonobj[i].Name);
         var text4 = document.createTextNode(jsonobj[i].GuardianName);
