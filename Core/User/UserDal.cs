@@ -29,17 +29,11 @@ namespace Core.Registration
             {
                 string query = $"INSERT INTO [User](Username, Email, Password, Role) VALUES(@Username, @Email, @Password, @Role)";
                 List<SqlParameter> parameters = new List<SqlParameter>();
-                //{
-                //    new SqlParameter("@Username", user.Username),
-                //    new SqlParameter("@Email", user.Email),
-                //    new SqlParameter("@Password", user.Password),
-                //    new SqlParameter("@Role", (int)user.Role)
-                //};
 
-                foreach (var prop in user.GetType().GetProperties())
+                foreach (var property in user.GetType().GetProperties())
                 {
-                    if (prop.Name.Equals("UserId")) continue;
-                    parameters.Add(new SqlParameter($"@{prop.Name}", prop.GetValue(user, null)));
+                    if (property.Name.Equals("UserId")) continue;
+                    parameters.Add(new SqlParameter($"@{property.Name}", property.GetValue(user, null)));
                 }
 
                 int rows = await helper.UpdateAndInsertData(query, parameters);
@@ -111,14 +105,10 @@ namespace Core.Registration
                 string query = @"SELECT [UserId], [Username], [Email], [Password], [Role] 
                                 FROM [User] WHERE Username = @Username AND Password = @Password";
                 List<SqlParameter> parameters = new List<SqlParameter>();
-                //{
-                //    new SqlParameter("@Username", login.Username),
-                //    new SqlParameter("@Password", login.Password)
-                //};
 
-                foreach (var prop in login.GetType().GetProperties())
+                foreach (var property in login.GetType().GetProperties())
                 {
-                    parameters.Add(new SqlParameter($"@{prop.Name}", prop.GetValue(login, null)));
+                    parameters.Add(new SqlParameter($"@{property.Name}", property.GetValue(login, null)));
                 }
 
                 DataTable dataTable = await helper.GetData(query, parameters);

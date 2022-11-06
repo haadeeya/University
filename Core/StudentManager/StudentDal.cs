@@ -35,23 +35,12 @@ namespace Core.StudentManager
             {
                 List<SqlParameter> insertStudentParameters = new List<SqlParameter>();
                 Type studentType = student.GetType();
-                //insertStudentParameters.Add(new SqlParameter("@StudentId", entity.Id));
-                //insertStudentParameters.Add(new SqlParameter("@UserId", entity.UserId));
-                //insertStudentParameters.Add(new SqlParameter("@NID", entity.NID));
-                //insertStudentParameters.Add(new SqlParameter("@Name", entity.Name));
-                //insertStudentParameters.Add(new SqlParameter("@Surname", entity.Surname));
-                //insertStudentParameters.Add(new SqlParameter("@GuardianName", entity.GuardianName));
-                //insertStudentParameters.Add(new SqlParameter("@EmailAddress", entity.EmailAddress));
-                //insertStudentParameters.Add(new SqlParameter("@DateOfBirth", entity.DateOfBirth));
-                //insertStudentParameters.Add(new SqlParameter("@PhoneNumber", entity.PhoneNumber));
-                //insertStudentParameters.Add(new SqlParameter("@Status", entity.Status));
 
-                foreach (var prop in student.GetType().GetProperties())
+                foreach (var property in student.GetType().GetProperties())
                 {
-                    Debug.WriteLine(IsPrimitive(prop.PropertyType));
-                    if (IsPrimitive(prop.PropertyType) && prop.Name!="Marks")
+                    if (IsPrimitive(property.PropertyType) && property.Name!="Marks")
                     {
-                        insertStudentParameters.Add(new SqlParameter($"@{prop.Name}", prop.GetValue(student, null)));
+                        insertStudentParameters.Add(new SqlParameter($"@{property.Name}", property.GetValue(student, null)));
                     }
                 }
 
@@ -60,18 +49,9 @@ namespace Core.StudentManager
                 foreach (var subject in student.Subjects)
                 {
                     List<SqlParameter> insertSubjectParameters = new List<SqlParameter>();
-                    Type subjectType = subject.GetType();
-
-                    foreach(var property in subject.GetType().GetProperties())
-                    {
-                        if (property.Name.Equals("StudentId") || property.Name.Equals("SubjectId") || property.Name.Equals("Grade"))
-                        {
-                            insertSubjectParameters.Add(new SqlParameter($"@{property.Name}", property.GetValue(subject, null)));
-                        }
-                    }
-                    //insertSubjectParameters.Add(new SqlParameter("@StudentId", subject.StudentId));
-                    //insertSubjectParameters.Add(new SqlParameter("@SubjectId", subject.SubjectId));
-                    //insertSubjectParameters.Add(new SqlParameter("@Grade", subject.Grade));
+                    insertSubjectParameters.Add(new SqlParameter("@StudentId", subject.StudentId));
+                    insertSubjectParameters.Add(new SqlParameter("@SubjectId", subject.SubjectId));
+                    insertSubjectParameters.Add(new SqlParameter("@Grade", subject.Grade));
 
                     await helper.UpdateAndInsertData(insertSubjectQuery, insertSubjectParameters, transaction);
                 }
@@ -162,7 +142,9 @@ namespace Core.StudentManager
 
             try
             {
-                string query = @"SELECT * FROM [Student] s
+                string query = @"SELECT s.[StudentId], [UserId], [Name], [Surname], 
+                                [NID], [GuardianName], [EmailAddress], [DateOfBirth], [PhoneNumber], sb.[SubjectName],
+                                sb.[SubjectId], ss.[StudentSubjectId], ss.[Grade], [Status] FROM [Student] s
                                 INNER JOIN StudentSubject ss on ss.StudentId = s.StudentId
                                 INNER JOIN Subject sb on sb.SubjectId = ss.SubjectId
                                 WHERE s.StudentId = @StudentId";
