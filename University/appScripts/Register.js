@@ -1,42 +1,34 @@
-﻿function register() {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var toastr = require("toastr");
+function register() {
     event.preventDefault();
-
     sendData();
 }
-
 function sendData() {
-    const XHR = new XMLHttpRequest();
-
-    // Define what happens on successful data submission
-    XHR.addEventListener("load", (event) => {
-        let data = JSON.parse(event.target.responseText);
-
+    var XHR = new XMLHttpRequest();
+    XHR.addEventListener("load", function (event) {
+        var data = JSON.parse(XHR.responseText);
         if (data.error) {
             toastr.error(data.error);
             return false;
-        } else {
+        }
+        else {
             window.location = data.url;
         }
     });
-
-    // Define what happens in case of error
-    XHR.addEventListener("error", (event) => {
+    XHR.addEventListener("error", function (event) {
         toastr.error('Something went wrong');
     });
-    //debugger;
-    // Set up our request
     XHR.open("POST", "/Account/Register");
     var username = document.getElementById("username").value;
     var password = document.getElementById("password").value;
     var email = document.getElementById("email").value;
-
-    let data = new FormData();
+    var data = new FormData();
     data.set('Username', username);
     data.set('Password', password);
     data.set('Email', email);
-
     console.log(data);
-
-    // The data sent is what the user provided in the form
     XHR.send(data);
 }
+//# sourceMappingURL=Register.js.map

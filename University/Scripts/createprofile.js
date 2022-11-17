@@ -61,7 +61,7 @@ function removeSubject() {
     count--;
 }
 
-function createProfile(event) {
+function createProfile() {
     event.preventDefault();
     var subjects=[];
     var subject;
